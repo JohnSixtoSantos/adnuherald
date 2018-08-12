@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tweet_text: MyString
+  tweet_lat: 9.99
+  tweet_lon: 9.99
+  tweet_user: MyString
+  tweet_time: 2018-08-09 21:41:12
+  job_id: 1
+
+two:
+  tweet_text: MyString
+  tweet_lat: 9.99
+  tweet_lon: 9.99
+  tweet_user: MyString
+  tweet_time: 2018-08-09 21:41:12
+  job_id: 1

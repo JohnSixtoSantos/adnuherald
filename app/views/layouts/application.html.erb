@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Herald | Open Access to Twitter Analytics</title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+
+    <div class="wrapper">
+        <div class="sidebar" data-color="purple" data-background-color="white" data-image="../assets/img/sidebar-1.jpg">
+            <!--
+        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+
+        Tip 2: you can also add an image using data-image tag
+    -->
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+                    ADNU | Herald
+                </a>
+            </div>
+            <div class="sidebar-wrapper">
+                <ul class="nav">
+                    <li class="nav-item active ">
+                        <a class="nav-link" href="/">
+                            <i class="material-icons">dashboard</i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/browse">
+                            <i class="material-icons">dashboard</i>
+                           <p>Browse Datasets</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/sentiment">
+                            <i class="material-icons">library_books</i>
+                            <p>Sentiment Analysis</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/topic">
+                            <i class="material-icons">library_books</i>
+                            <p>Topic Analysis</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/summary">
+                            <i class="material-icons">library_books</i>
+                            <p>Summary Extraction</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/centrality">
+                            <i class="material-icons">library_books</i>
+                            <p>Centrality Analysis</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/geo">
+                            <i class="material-icons">library_books</i>
+                            <p>Geo-mapping</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    <%= yield %>
+  </body>
+</html>

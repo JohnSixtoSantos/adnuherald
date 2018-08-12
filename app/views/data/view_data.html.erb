@@ -1,0 +1,34 @@
+         <div class="main-panel"> 
+           <div class="content">
+                <div class="container-fluid">
+                                        
+                        <div class="col-lg-12 col-md-12">
+                            <div class="card">
+                                <div class="card-header card-header-warning">
+                                    <h4 class="card-title">Tweet Collections</h4>
+                                    <p class="card-category">These are Tweets that you have previously uploaded or collected</p>
+                                </div>
+                                <div class="card-body table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="text-warning">
+                                            <th>Tweet Text</th>
+                                            <th>User Name</th>
+                                            <th>Time Posted</th>
+                                        </thead>
+                                        <tbody>
+                                            <% @tweets.each do |c| %>
+                                                <tr>
+                                                    <td><%= c.tweet_text %></td>
+                                                    <td><%= c.tweet_user %></td>
+                                                    <td><%= c.tweet_time %></td>
+                                                </tr>
+                                            <% end %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </div> 
+        </div>    

@@ -1,0 +1,41 @@
+         <div class="main-panel"> 
+           <div class="content">
+                <div class="container-fluid">
+
+
+                     <div class="col-lg-12 col-md-12">
+                            <div class="card">
+                                <div class="card-header card-header-warning">
+                                    <h4 class="card-title">Topic Analysis Results</h4>
+                                    <p class="card-category"></p>
+                                </div>
+                                <div class="card-body table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="text-warning">
+                                            <% i = 1 %>
+                                            <% @topic_mat.each do |tc| %>
+                                                <th>Topic <%= i %></th>
+                                                <% i += 1 %>
+                                            <% end %>
+                                        </thead>
+                                        <tbody>
+                                            <% @topic_mat.each do |top| %>
+                                                <tr>
+                                                    <% top.each do |t| %>
+                                                        <td>
+                                                            <%= t %>
+                                                        </td>
+                                                    <% end %>
+                                                </tr>
+                                            <% end %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    
+                </div>
+            </div> 
+        </div>    
