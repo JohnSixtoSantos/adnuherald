@@ -10,10 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180809140704) do
+ActiveRecord::Schema.define(version: 201808121601010) do
 
   create_table "collections", force: :cascade do |t|
     t.string "collection_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "label_sets", force: :cascade do |t|
+    t.integer "collection_id"
+    t.integer "label_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "label_set_name"
+    t.decimal "percent"
+  end
+
+  create_table "labels", force: :cascade do |t|
+    t.integer "tweet_id"
+    t.integer "label"
+    t.integer "label_set_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
