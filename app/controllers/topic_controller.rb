@@ -15,7 +15,7 @@ class TopicController < ApplicationController
 		corpus = Lda::Corpus.new
 
 		@tweets.each do |r|
-			corpus.add_document(Lda::TextDocument.new(corpus, r.tweet_text.to_s))
+			corpus.add_document(Lda::TextDocument.new(corpus, data_clean(r.tweet_text.to_s)))
 		end
 
 		lda = Lda::Lda.new(corpus)
@@ -37,5 +37,7 @@ class TopicController < ApplicationController
 
 			@topic_mat.push(temp)
 		end
+
+		@topic_mat = unique_words(@topic_mat)
 	end
 end

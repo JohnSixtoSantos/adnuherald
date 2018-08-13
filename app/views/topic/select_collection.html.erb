@@ -17,9 +17,9 @@
                                             <% @collections.each do |c| %>
                                                 <tr>
                                                     <td><%= c.collection_name %></td>
-                                                    <td><a href="view_data/<%= c.id %>">View</a></td>
+                                                    
                                                     <td>
-                                                        
+                                                        <a href="view_data/<%= c.id %>"><button type="button" class="btn btn-info btn-lg12">View</button></a>
                                                         <!-- Trigger the modal with a button -->
                                                         <button type="button" class="btn btn-info btn-lg12" data-toggle="modal" data-target="#myModal<%= c.id %>">Use Collection</button>
 

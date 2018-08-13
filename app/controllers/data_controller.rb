@@ -2,10 +2,40 @@ require 'csv'
 
 class DataController < ApplicationController
 	def browse
+		@collections = Collection.all
+		@count = @collections.length
 	end
 
 	def upload_data
 		
+	end
+
+	def delete_data
+		@collection = Collection.find(params[:id])
+		@tweets = Tweet.where(id: @collection.id)
+
+		@collection.destroy
+
+		@tweets.each do |t|
+			t.destroy
+		end
+
+		redirect_to "/collections"
+	end
+
+	def edit_data
+		@collection = Collection.find(params[:id])
+		
+	end
+
+	def update_data
+		@collection = Collection.find(params[:id])
+
+		@collection.collection_name = params[:collection_name]
+
+		@collection.save
+
+		redirect_to "/collections"
 	end
 
 	def view_data

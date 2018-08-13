@@ -13,6 +13,10 @@ Rails.application.routes.draw do
 	get "sentiment", to: "sentiment#select_collection"
 	post "sentiment", to: "sentiment#show_training_page"
 	post "train_sentiment", to: "sentiment#train_model"
+	post "sentiment/upload", to: "sentiment#process_upload"
+	get "edit_data/:id", to: "data#edit_data"
+	post "edit_data/:id", to: "data#update_data"
+	get "delete_data/:id", to: "data#delete_data"
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
