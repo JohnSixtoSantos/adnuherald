@@ -1,0 +1,14 @@
+         <div class="main-panel"> 
+           <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <%= form_tag({controller: :data, action: :update_data}) do %>
+                            <%= label_tag(:q, "Collection Name:") %>
+                            <%= text_field_tag(:collection_name, @collection.collection_name) %>  
+
+                            <%= submit_tag("Save", class: "btn btn-default") %>
+                        <% end %>
+                    </div>
+                </div>
+            </div> 
+        </div>    

@@ -1,0 +1,93 @@
+         <div class="main-panel"> 
+           <div class="content">
+                <div class="container-fluid">
+                                        
+
+
+<div class="col-lg-6 col-md-12">
+                            <div class="card">
+                                <div class="card-header card-header-tabs card-header-primary">
+                                    <div class="nav-tabs-navigation">
+                                        <div class="nav-tabs-wrapper">
+                                            <span class="nav-tabs-title">Tasks:</span>
+                                            <ul class="nav nav-tabs" data-tabs="tabs">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" href="#profile" data-toggle="tab">
+                                                        <i class="material-icons">bug_report</i> Bugs
+                                                        <div class="ripple-container"></div>
+                                                    </a>
+                                                </li>
+                                                
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="profile">
+                                            <%= form_tag({controller: :sentiment, action: :train_model}) do %>
+                                            <table class="table">
+                                                <tbody>
+                                                    <% idx = 0 %>
+                                                    <% @tweets.each do |c| %>
+                                                    <tr>
+                                                        <td><%= c.tweet_text %></td>
+                                                        <td><%= c.tweet_user %></td>
+                                                        <td><%= c.tweet_time %></td>
+                                                        <td>
+                                                            <select name="sentiment<%= c.id %>">
+                                                                <option value="1">Positive</option>
+                                                                <option value="0">Objective</option>
+                                                                <option value="-1">Negative</option>
+                                                            </select>
+                                                            
+                                                        </td>
+                                                        
+                                                    </tr> 
+                                                    <% end %>
+                                                </tbody>
+                                            </table>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <%= hidden_field_tag(:percent, params[:percent]) %>
+                        <%= hidden_field_tag(:collection_id, params[:collection_id]) %>
+                        <%= submit_tag("Run Sentiment Analysis", class: "btn btn-default") %>
+
+                        <!-- Trigger the modal with a button -->
+                                                        <button type="button" class="btn btn-info btn-lg12" data-toggle="modal" data-target="#myModal">Save Labels</button>
+
+                                                        <!-- Modal -->
+                                                        <div id="myModal" class="modal fade" role="dialog">
+                                                          <div class="modal-dialog">
+
+                                                            <!-- Modal content-->
+                                                            <div class="modal-content">
+                                                              <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                <h4 class="modal-title">Input a name for this label set: </h4>
+                                                                <%= text_field_tag(:label_set_name) %>  
+                                                              </div>
+                                                                
+                                                              <div class="modal-body">
+                                                              
+                                                              </div>
+                                                              <div class="modal-footer">
+                                                                <%= submit_tag("Save", class: "btn btn-default") %>
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                              </div>
+                                                            
+                                                            </div>
+                                                            
+                                                          </div>
+                                                        </div>
+
+
+                        
+                        <% end %>
+                </div>
+            </div> 
+        </div>    

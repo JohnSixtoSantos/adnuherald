@@ -1,0 +1,2 @@
+class LabelSet < ApplicationRecord
+end
