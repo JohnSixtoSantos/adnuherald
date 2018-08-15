@@ -1,6 +1,7 @@
 require 'csv'
 
 class DataController < ApplicationController
+
 	def browse
 		@collections = Collection.all
 		@count = @collections.length

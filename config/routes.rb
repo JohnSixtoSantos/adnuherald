@@ -17,6 +17,8 @@ Rails.application.routes.draw do
 	get "edit_data/:id", to: "data#edit_data"
 	post "edit_data/:id", to: "data#update_data"
 	get "delete_data/:id", to: "data#delete_data"
+	get "summary", to: "summary#select_collection"
+	post "summary", to: "summary#run_summarization"
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
