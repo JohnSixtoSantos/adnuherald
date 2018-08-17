@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 	get "delete_data/:id", to: "data#delete_data"
 	get "summary", to: "summary#select_collection"
 	post "summary", to: "summary#run_summarization"
+	get "centrality", to: "centrality#select_collection"
+	post "centrality", to: "centrality#calculate_centrality"
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

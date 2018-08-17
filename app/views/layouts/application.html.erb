@@ -67,6 +67,9 @@
                 </ul>
             </div>
         </div>
-    <%= yield %>
+    <div class="main-panel"> 
+        <%= render "shared/nav" %>
+       <%= yield %>
+    </div>
   </body>
 </html>

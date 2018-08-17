@@ -1,31 +1,27 @@
-        
+         
            <div class="content">
                 <div class="container-fluid">
-
-
-                     <div class="col-lg-12 col-md-12">
+                    <div class="col-lg-12 col-md-12">
                             <div class="card">
                                 <div class="card-header card-header-warning">
-                                    <h4 class="card-title">Topic Analysis Results</h4>
-                                    <p class="card-category"></p>
+                                    <h4 class="card-title">Topic Analysis</h4>
+                                    <p class="card-category">Select a Tweet collection for topic analysis</p>
                                 </div>
                                 <div class="card-body table-responsive">
                                     <table class="table table-hover">
                                         <thead class="text-warning">
-                                            <% i = 1 %>
-                                            <% @topic_mat.each do |tc| %>
-                                                <th>Topic <%= i %></th>
-                                                <% i += 1 %>
-                                            <% end %>
+                                            <th>Collection Name</th>
+                                            <th></th>
                                         </thead>
                                         <tbody>
-                                            <% @topic_mat.each do |top| %>
+                                            <% @user_hash.each do |k, v| %>
                                                 <tr>
-                                                    <% top.each do |t| %>
-                                                        <td>
-                                                            <%= t %>
-                                                        </td>
-                                                    <% end %>
+                                                    <td>
+                                                        <%= k %>
+                                                    </td>
+                                                    <td>
+                                                        <%= v %>
+                                                    </td>
                                                 </tr>
                                             <% end %>
                                         </tbody>
@@ -34,8 +30,7 @@
                             </div>
                         </div>
 
-
                     
                 </div>
             </div> 
-         
+        
