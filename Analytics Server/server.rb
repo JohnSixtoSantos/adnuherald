@@ -1,6 +1,14 @@
-class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
-	def unique_words(mat)
+require 'socket'
+require 'sqlite3'
+require 'lda-ruby'
+require_relative 'summarizer'
+
+PORT   = 8081
+DB_PATH = "../db/development.sqlite3"
+
+socket = TCPServer.new('0.0.0.0', PORT)
+
+def unique_words(mat)
 		words = []
 
 		mat.each do |row|
@@ -42,7 +50,7 @@ class ApplicationController < ActionController::Base
 		return new_mat
 	end
 
-	 def data_clean(s)
+	def data_clean(s)
 		#remove UTF
 		#remove stopwords c
 		#remove urls c
@@ -487,5 +495,85 @@ class ApplicationController < ActionController::Base
 		return s
 	end
 
+def run_topic_analysis(collection_id, num_topics, num_words)
+	puts "Collection ID: " + collection_id.to_s
+	puts "Number of Topics: " + num_topics.to_s
+	puts "Number of Words: " + num_words.to_s
 
+	db = SQLite3::Database.new DB_PATH
+
+	@tweets = []
+
+	db.execute("SELECT * from tweets WHERE job_id = ?;", collection_id) do |row|
+		 @tweets.append(row[1])
+	end
+
+	corpus = Lda::Corpus.new
+
+	@tweets.each do |r|
+		corpus.add_document(Lda::TextDocument.new(corpus, data_clean(r.to_s)))
+	end
+
+	lda = Lda::Lda.new(corpus)
+	lda.verbose = false
+	lda.num_topics = num_topics
+
+	lda.em("random")
+
+	topics = lda.top_words(num_words)
+
+	@topic_mat = []
+
+	(0...num_topics).each do |i|
+		temp = []
+
+		topics[i].each do |word|
+			temp.push(word)
+		end
+
+		@topic_mat.push(temp)
+	end
+
+	@topic_mat = unique_words(@topic_mat)
+
+	p @topic_mat
+
+	db.close
+end
+
+def run_summarization(collection_id, topic_word, bval)
+	db = SQLite3::Database.new DB_PATH
+
+	@tweets = []
+
+	db.execute("SELECT * from tweets WHERE job_id = ?;", collection_id) do |row|
+	 	@tweets.append(data_clean(row[1]))
+	end
+
+	@result = summarize(@tweets, topic_word.downcase, bval)
+
+	p @result.chomp
+
+	db.close
+end
+
+puts "Listening on #{PORT}. Press CTRL+C to cancel."
+
+loop do
+	client = socket.accept
+	job_type = client.gets.chomp
+
+	if job_type == "topic" then
+		c_id = client.gets.to_i
+		nt = client.gets.to_i
+		nw = client.gets.to_i
+
+		Thread.new { run_topic_analysis(c_id, nt, nw) }
+	elsif job_type == "summary" then
+		collection_id = client.gets.to_i
+		topic_word = client.gets
+		bval = client.gets.to_f
+
+		Thread.new { run_summarization(collection_id, topic_word.chomp, bval) }
+	end
 end

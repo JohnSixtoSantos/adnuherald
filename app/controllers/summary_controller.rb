@@ -15,8 +15,8 @@ class SummaryController < ApplicationController
 		@tweets = []
 
 		@raw_tweets.each do |t|
-			#@tweets.append(data_clean(t.tweet_text))
-			@tweets.append(t.tweet_text.downcase)
+			@tweets.append(data_clean(t.tweet_text))
+			#@tweets.append(t.tweet_text.downcase)
 		end
 
 		@result = summarize(@tweets, @topic_word.downcase, @bval.to_f)
