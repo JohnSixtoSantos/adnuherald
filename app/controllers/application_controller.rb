@@ -1,5 +1,42 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  	def stringarr_to_vector(s)
+  		dict = Hash.new
+		words = []
+			
+		s.each do |r|
+			b = r.tweet_text.split(' ')
+
+			b.each do |bw|
+				words.append(bw)
+			end
+		end
+
+		uniques = words.uniq.sort
+		ulen = uniques.length
+
+		ctr = 0
+		uniques.each do |u|
+			dict[u] = ctr
+			ctr += 1
+		end
+
+		dataset = []
+			
+		s.each do |r|
+			bow = Array.new(ulen, 0)
+
+		    b = r.tweet_text.split(' ')
+		    b.each do |bw|
+			    bow[dict[bw]] = 1 
+			end
+
+			dataset.append(bow)
+		end
+
+		return dataset
+  	end
+
 	def unique_words(mat)
 		words = []
 

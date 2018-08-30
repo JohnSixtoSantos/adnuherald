@@ -36,13 +36,14 @@
                                                         <td><%= c.tweet_time %></td>
                                                         <td>
                                                             <select name="sentiment<%= c.id %>">
+                                                                <option></option>
                                                                 <option value="1">Positive</option>
                                                                 <option value="0">Objective</option>
                                                                 <option value="-1">Negative</option>
                                                             </select>
                                                             
                                                         </td>
-                                                        
+                                                        <%= hidden_field_tag("tweets[]", c.id) %>
                                                     </tr> 
                                                     <% end %>
                                                 </tbody>

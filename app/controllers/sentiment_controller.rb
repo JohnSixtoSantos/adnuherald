@@ -45,31 +45,32 @@ class SentimentController < ApplicationController
 	end
 
 	def show_training_page
+		#get tweets related to the collection selected
 		@tweets = Tweet.where(job_id: params[:collection_id])
 
-		first_bound = (@tweets.length * params[:percent].to_f).floor
+		#randomize the tweets
+		@tweets = @tweets.shuffle
 
+		#select the top n percent of the randomized tweetset
+		first_bound = (@tweets.length * params[:percent].to_f).floor
 		@tweets = @tweets[0...first_bound]
 	end
 
 	def train_model
 		if params[:commit] == "Save" then
-			@tweets = Tweet.where(job_id: params[:collection_id])
-			first_bound = (@tweets.length * params[:percent].to_f).floor
-
-			@train_tweets = @tweets[0...first_bound]
-
 			@label_set = LabelSet.new
 			@label_set.collection_id = params[:collection_id]
 			@label_set.label_set_name = params[:label_set_name] + " (" + DateTime.now.to_s + ")"
 			@label_set.percent = params[:percent]
 			@label_set.save
 
-			@train_tweets.each do |r|
+			params["tweets"].each do |tid|
+				@tweets = Tweet.find(tid)				
+
 				@nlabel = Label.new
-				@nlabel.tweet_id = r.id
-				@nlabel.label = params["sentiment" + r.id.to_s].to_i
-				@nlabel.label_set_id = @label_set.id #should be label_set_id
+				@nlabel.tweet_id = tid
+				@nlabel.label = params["sentiment" + tid.to_s].to_i
+				@nlabel.label_set_id = @label_set.id
 				@nlabel.save
 			end
 
@@ -79,74 +80,34 @@ class SentimentController < ApplicationController
 			@label_set_id = params[:label_set_id]
 
 			@collection_id = LabelSet.find(@label_set_id).collection_id
-			@percent = LabelSet.find(@label_set_id).percent
-
-			@tweets = Tweet.where(job_id: @collection_id)
-
-			@tweets.each do |t|
-				t.tweet_text = data_clean(t.tweet_text.to_s)
-			end
 			
-			first_bound = (@tweets.length * @percent.to_f).floor
-
-			puts "Percent: " + @percent.to_s
-
-			dict = Hash.new
-			words = []
+			@testing_set = []
+			@training_set = []
+			@raw_tweets = Tweet.where(job_id: @collection_id)
 			labels = []
 
-			@dlabels = Label.where(label_set_id: params[:label_set_id])
-
-			@dlabels.each do |dlab|
-				labels.append(dlab.label)
-			end
-
-			@tweets.each do |r|
-				b = r.tweet_text.split(' ')
-
-				b.each do |bw|
-					words.append(bw)
+			@raw_tweets.each do |t|
+				@temp_label = Label.where(label_set_id: @label_set_id).where(tweet_id: t.id)
+				if @temp_label[0].nil? then
+					ntweet = Tweet.find(t.id)
+					@testing_set.append(ntweet)
+				else
+					ntweet = Tweet.find(t.id)
+					@training_set.append(ntweet)
+					labels.append(@temp_label[0].label)
+					p ntweet
+					p @temp_label[0].label
 				end
-			end
+			end			
 
-			uniques = words.uniq.sort
-			ulen = uniques.length
-
-			ctr = 0
-			uniques.each do |u|
-				dict[u] = ctr
-				ctr += 1
-			end
-
-			dataset = []
-			
-			@tweets.each do |r|
-				bow = Array.new(ulen, 0)
-
-			    b = r.tweet_text.split(' ')
-			    b.each do |bw|
-				    bow[dict[bw]] = 1 
-				end
-
-				dataset.append(bow)
-			end
-
-			@train_tweets = dataset[0...first_bound]
-			@test_tweets = dataset[first_bound...@tweets.length]
-
-			puts first_bound
-
-			@train_labels = labels[0...first_bound]
-			#@test_labels = labels[first_bound...@tweets.length]
-
-
-			puts "hello" 
-			puts @train_labels
+			@train_tweets = stringarr_to_vector(@training_set)
+			@test_tweets = stringarr_to_vector(@testing_set)
 
 			model = Liblinear.train(
-		  	{ solver_type: Liblinear::L2R_LR },   # parameter
-		 	 @train_labels,                       # labels (classes) of training data
-		 	 @train_tweets, # training data
+		  	{ solver_type: Liblinear::L2R_LR  },   # parameter
+		 	 labels,                       # labels (classes) of training data
+		 	 @train_tweets,
+		 	 1 # training data
 			)
 
 			i = 0
@@ -156,18 +117,9 @@ class SentimentController < ApplicationController
 
 			@test_tweets.each do |data|
 				@pred.append(Liblinear.predict(model, data))
-
-				#puts @test_labels[i]
-
-				#if @pred[i] == @test_labels[i] then
-				#	matches += 1	
-				#end
-				#i += 1		
 			end
 
-			#@accuracy = (matches.to_f / @test_tweets.length.to_f) * 100
-
-			@disp_tweets = @tweets[first_bound...@tweets.length]
+			@disp_tweets = @testing_set
 		else
 			@tweets = Tweet.where(job_id: params[:collection_id])
 			
@@ -221,8 +173,6 @@ class SentimentController < ApplicationController
 			@train_labels = labels[0...first_bound]
 			#@test_labels = labels[first_bound...@tweets.length]
 
-
-			puts "hello" 
 			puts @train_labels
 
 			model = Liblinear.train(

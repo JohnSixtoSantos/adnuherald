@@ -12,6 +12,17 @@ class TopicController < ApplicationController
 		@tweets = Tweet.where(job_id: @collection.id)
 
 
+		#CODE FOR ASYNCHRONOUS PROCESSING
+
+		#socket = TCPSocket.new('0.0.0.0', 8081)
+
+		#socket.puts("topic")
+		#socket.puts(@collection.id)
+		#socket.puts(ntopics)
+		#socket.puts(nwords)
+
+		#socket.close
+
 		corpus = Lda::Corpus.new
 
 		@tweets.each do |r|
