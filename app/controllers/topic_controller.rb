@@ -14,41 +14,63 @@ class TopicController < ApplicationController
 
 		#CODE FOR ASYNCHRONOUS PROCESSING
 
-		#socket = TCPSocket.new('0.0.0.0', 8081)
+		socket = TCPSocket.new('0.0.0.0', 8081)
 
-		#socket.puts("topic")
-		#socket.puts(@collection.id)
-		#socket.puts(ntopics)
-		#socket.puts(nwords)
+		socket.puts("topic")
+		socket.puts(@collection.id)
+		socket.puts(ntopics)
+		socket.puts(nwords)
 
-		#socket.close
+		socket.close
 
-		corpus = Lda::Corpus.new
+		redirect_to "/topic"
 
-		@tweets.each do |r|
-			corpus.add_document(Lda::TextDocument.new(corpus, data_clean(r.tweet_text.to_s)))
-		end
+		#corpus = Lda::Corpus.new
 
-		lda = Lda::Lda.new(corpus)
-		lda.verbose = false
-		lda.num_topics = ntopics
+		#@tweets.each do |r|
+		#	corpus.add_document(Lda::TextDocument.new(corpus, data_clean(r.tweet_text.to_s)))
+		#end
 
-		lda.em("random")
+		#lda = Lda::Lda.new(corpus)
+		#lda.verbose = false
+		#lda.num_topics = ntopics
 
-		topics = lda.top_words(nwords)
+		#lda.em("random")
 
-		@topic_mat = []
+		#topics = lda.top_words(nwords)
 
-		(0...ntopics).each do |i|
-			temp = []
+		#@topic_mat = []
 
-			topics[i].each do |word|
-				temp.push(word)
-			end
+		#(0...ntopics).each do |i|
+		#	temp = []
 
-			@topic_mat.push(temp)
-		end
+		#	topics[i].each do |word|
+		#		temp.push(word)
+		#	end
 
-		@topic_mat = unique_words(@topic_mat)
+		#	@topic_mat.push(temp)
+		#end
+
+		#@n_topic_results = TopicAnalysisResult.new
+		#@n_topic_results.description = "DESCRIPTION HERE"
+		#@n_topic_results.collection_id = params[:collection_id]
+		#@n_topic_results.save
+
+		#i = 0
+		#@topic_mat.each do |row|
+		#	j = 0
+		#	row.each do |item|
+		#		@n_tword = TopicWord.new
+		#		@n_tword.topic_number = i 
+		#		@n_tword.word = item
+		#		@n_tword.order_number = j
+		#		@n_tword.topic_analysis_result_id = @n_topic_results.id
+		#		@n_tword.save
+		#		j += 1
+		#	end
+		#	i += 1
+		#end
+
+		#@topic_mat = unique_words(@topic_mat)
 	end
 end

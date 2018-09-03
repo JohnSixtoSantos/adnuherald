@@ -1,4 +1,4 @@
-require_relative "Pair"
+require_relative "pair"
 
 class WordNode
 	@word = ""

@@ -1,0 +1,2 @@
+class TopicAnalysisResult < ApplicationRecord
+end

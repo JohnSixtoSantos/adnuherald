@@ -3,6 +3,10 @@ require 'sqlite3'
 require 'lda-ruby'
 require_relative 'summarizer'
 
+ENV['RAILS_ENV'] = "development" # Set to your desired Rails environment name
+require '../config/environment.rb'
+require 'active_record'
+
 PORT   = 8081
 DB_PATH = "../db/development.sqlite3"
 
@@ -495,23 +499,21 @@ def unique_words(mat)
 		return s
 	end
 
-def run_topic_analysis(collection_id, num_topics, num_words)
+def run_sentiment_analysis()
+
+end	
+
+def run_topic_analysis(collection_id, num_topics, num_words, description)
 	puts "Collection ID: " + collection_id.to_s
 	puts "Number of Topics: " + num_topics.to_s
 	puts "Number of Words: " + num_words.to_s
 
-	db = SQLite3::Database.new DB_PATH
-
-	@tweets = []
-
-	db.execute("SELECT * from tweets WHERE job_id = ?;", collection_id) do |row|
-		 @tweets.append(row[1])
-	end
+	@tweets = Tweet.where(job_id: collection_id)
 
 	corpus = Lda::Corpus.new
 
 	@tweets.each do |r|
-		corpus.add_document(Lda::TextDocument.new(corpus, data_clean(r.to_s)))
+		corpus.add_document(Lda::TextDocument.new(corpus, data_clean(r.tweet_text.to_s)))
 	end
 
 	lda = Lda::Lda.new(corpus)
@@ -536,25 +538,51 @@ def run_topic_analysis(collection_id, num_topics, num_words)
 
 	@topic_mat = unique_words(@topic_mat)
 
+	@n_topic_results = TopicAnalysisResult.new
+	@n_topic_results.description = description
+	@n_topic_results.collection_id = collection_id
+	@n_topic_results.save
+
+	i = 0
+	@topic_mat.each do |row|
+		j = 0
+		row.each do |item|
+			@n_tword = TopicWord.new
+				@n_tword.topic_number = i 
+				@n_tword.word = item
+				@n_tword.order_number = j
+				@n_tword.topic_analysis_result_id = @n_topic_results.id
+				@n_tword.save
+				j += 1
+		end
+		i += 1
+	end
+
+	@topic_mat = unique_words(@topic_mat)
+
 	p @topic_mat
 
-	db.close
+	@message = Notification.new
+	@message.message = "Topic Analysis Complete!"
+	@message.is_read = true
+	@message.message_type = "analytics"
+
+	@message.save
 end
 
 def run_summarization(collection_id, topic_word, bval)
-	db = SQLite3::Database.new DB_PATH
-
 	@tweets = []
+	
+	t = Tweet.where(job_id: collection_id)
 
-	db.execute("SELECT * from tweets WHERE job_id = ?;", collection_id) do |row|
-	 	@tweets.append(data_clean(row[1]))
+	t.each do |row|
+	 	@tweets.append(data_clean(row.tweet_text))
+	 	
 	end
 
 	@result = summarize(@tweets, topic_word.downcase, bval)
 
 	p @result.chomp
-
-	db.close
 end
 
 puts "Listening on #{PORT}. Press CTRL+C to cancel."
@@ -567,12 +595,14 @@ loop do
 		c_id = client.gets.to_i
 		nt = client.gets.to_i
 		nw = client.gets.to_i
+		desc = client.gets
 
-		Thread.new { run_topic_analysis(c_id, nt, nw) }
+		Thread.new { run_topic_analysis(c_id, nt, nw, desc) }
 	elsif job_type == "summary" then
 		collection_id = client.gets.to_i
 		topic_word = client.gets
 		bval = client.gets.to_f
+		
 
 		Thread.new { run_summarization(collection_id, topic_word.chomp, bval) }
 	end

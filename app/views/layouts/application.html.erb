@@ -68,7 +68,7 @@
             </div>
         </div>
     <div class="main-panel"> 
-        <%= render "shared/nav" %>
+        <%= render "shared/nav", notes: Notification.all %>
        <%= yield %>
     </div>
   </body>

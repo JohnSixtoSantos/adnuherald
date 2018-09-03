@@ -1,5 +1,5 @@
 require 'liblinear'
-require 'CSV'
+require 'csv'
 
 class SentimentController < ApplicationController
 	def select_collection

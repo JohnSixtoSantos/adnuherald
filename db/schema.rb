@@ -35,6 +35,30 @@ ActiveRecord::Schema.define(version: 201808121601010) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.string "message"
+    t.boolean "is_read"
+    t.string "message_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "topic_analysis_results", force: :cascade do |t|
+    t.string "description"
+    t.integer "collection_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "topic_words", force: :cascade do |t|
+    t.integer "topic_number"
+    t.string "word"
+    t.integer "order_number"
+    t.integer "topic_analysis_result_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "tweets", force: :cascade do |t|
     t.string "tweet_text"
     t.decimal "tweet_lat"
