@@ -44,17 +44,17 @@ ActiveRecord::Schema.define(version: 201808121601010) do
   end
 
   create_table "topic_analysis_results", force: :cascade do |t|
-    t.string "description"
+    t.integer "num_topics"
+    t.integer "num_words"
     t.integer "collection_id"
+    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "topic_words", force: :cascade do |t|
+  create_table "topics", force: :cascade do |t|
+    t.integer "topic_result_id"
     t.integer "topic_number"
-    t.string "word"
-    t.integer "order_number"
-    t.integer "topic_analysis_result_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -66,6 +66,14 @@ ActiveRecord::Schema.define(version: 201808121601010) do
     t.string "tweet_user"
     t.datetime "tweet_time"
     t.integer "job_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "words", force: :cascade do |t|
+    t.string "word"
+    t.integer "order_number"
+    t.integer "topic_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

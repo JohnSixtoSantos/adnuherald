@@ -31,30 +31,40 @@
                                                             <div class="modal-content">
                                                               <div class="modal-header">
                                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                                <h4 class="modal-title">Configure the Topic Analyzer</h4>
+                                                                
                                                               </div>
                                                                 <%= form_tag({controller: :topic, action: :run_lda}) do %>
                                                               <div class="modal-body">
                                                                 
-                                                                    
-                                                                    <div>
-                                                                    <%= label_tag(:q, "Number of Topics:") %>
-                                                                    <%= text_field_tag(:ntopics) %>  
-                                                                    </div>
+                                                                    <div class="card text-center">
+                                                                        <div class="card-header card-header-success">
+                                                                            <h4 class="card-title">Topic Analysis Configuration</h4>
+                                                                            <p class="card-category">Please provide the necessary parameters to the analyzer.</p>
+                                                                        </div>
 
-                                                                    <div>
-                                                                    <%= label_tag(:q, "Number of Words per Topic:") %>
-                                                                    <%= text_field_tag(:nwords) %> 
+                                                                        <div class="card-body table-responsive">
+                                                                            <table class="table table-hover">
+                                                                                <tr>
+                                                                                    <td><%= label_tag(:q, "Number of Topics:") %></td>
+                                                                                    <td><%= text_field_tag(:ntopics) %></td>
+                                                                                </tr>
 
-                                                                    <%= hidden_field_tag(:collection_id, c.id) %>
-                                                                    </div>
-                                                                    <div>
-                                                                        This analysis is going to take a while. 
-                                                                    </div>
-                                                                    <div>
-                                                                        Watch out for the notification when its done!
-                                                                    </div>
+                                                                                <tr>
+                                                                                    <td><%= label_tag(:q, "Number of Words per Topic:") %></td>
+                                                                                    <td><%= text_field_tag(:nwords) %> </td>
 
+                                                                                    <%= hidden_field_tag(:collection_id, c.id) %>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td><%= label_tag(:q, "Descriptive Note:") %></td>
+                                                                                    <td><%= text_area_tag(:desc) %></td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                        <div class="card-footer">
+                                                                              <p class="card-text">  This analysis is going to take a while. Watch out for the notification when its done!</p>
+                                                                        </div>
+                                                                    </div>
                                                               </div>
                                                               <div class="modal-footer">
                                                                     <%= submit_tag("Run Analysis", class: "btn btn-default") %>
@@ -67,7 +77,9 @@
                                                         </div>
 
                                                     </td>
-                                
+                                                    <td>
+                                                        <a href="topic/analyses/<%= c.id %>"><button type="button" class="btn btn-info btn-lg12">View Previous Analyses</button></a>
+                                                    </td>
                                                 </tr>
                                             <% end %>
                                         </tbody>

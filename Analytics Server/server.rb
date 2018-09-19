@@ -8,7 +8,6 @@ require '../config/environment.rb'
 require 'active_record'
 
 PORT   = 8081
-DB_PATH = "../db/development.sqlite3"
 
 socket = TCPServer.new('0.0.0.0', PORT)
 
@@ -546,14 +545,20 @@ def run_topic_analysis(collection_id, num_topics, num_words, description)
 	i = 0
 	@topic_mat.each do |row|
 		j = 0
+
+		@topc = Topic.new
+		@topc.topic_number = i
+		@topc.topic_result_id = @n_topic_results.id
+		@topc.save
+
 		row.each do |item|
-			@n_tword = TopicWord.new
-				@n_tword.topic_number = i 
-				@n_tword.word = item
-				@n_tword.order_number = j
-				@n_tword.topic_analysis_result_id = @n_topic_results.id
-				@n_tword.save
-				j += 1
+			@n_tword = Word.new
+			@n_tword.word = item
+			@n_tword.order_number = j
+			@n_tword.topic_id = @topc.id
+			@n_tword.save
+
+			j += 1
 		end
 		i += 1
 	end
@@ -564,7 +569,7 @@ def run_topic_analysis(collection_id, num_topics, num_words, description)
 
 	@message = Notification.new
 	@message.message = "Topic Analysis Complete!"
-	@message.is_read = true
+	@message.is_read = false
 	@message.message_type = "analytics"
 
 	@message.save

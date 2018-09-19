@@ -1,6 +1,15 @@
 require 'lda-ruby'
 
 class TopicController < ApplicationController
+	def view_result_sets
+		@results = TopicAnalysisResult.where(collection_id: params[:cid])
+		@collection = Collection.find(params[:cid])
+	end
+
+	def view_results
+		@topics = Topic.where(topic_result_id: params[:cid]).order(:topic_number)
+	end
+
 	def select_collection
 		@collections = Collection.all
 	end

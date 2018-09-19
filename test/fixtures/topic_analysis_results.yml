@@ -1,9 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  description: MyString
+  num_topics: 1
+  num_words: 1
   collection_id: 1
+  description: MyString
 
 two:
-  description: MyString
+  num_topics: 1
+  num_words: 1
   collection_id: 1
+  description: MyString

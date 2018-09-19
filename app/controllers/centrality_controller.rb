@@ -29,5 +29,14 @@ class CentralityController < ApplicationController
 		end
 
 		@user_hash = @user_hash.sort_by{|k,v| v}.reverse.to_h
+
+		@words = []
+
+		@user_hash.each do |k,v|
+			@words.append([k,v])
+		end
+
+		@cloud = MagicCloud::Cloud.new(@words[0...30], rotate: :free, scale: :log)
+		@cloud.draw(1000,1000)
 	end
 end
