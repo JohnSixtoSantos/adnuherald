@@ -12,10 +12,12 @@
 //
 //= require rails-ujs
 //= require turbolinks
-//= require jquery
-//= require jquery_ujs
+//= require front-js/jquery.min
+//= require front-js/jquery.easing.min
+//= require front-js/bootstrap
+//= require front-js/bootstrap.bundle
 //= require popper
-//= require leaflet
+//= require front-js/new-age
 //= require material/bootstrap-material-design
 //= require material/perfect-scrollbar.jquery.min
 //= require material/chartist.min
@@ -23,4 +25,8 @@
 //= require material/bootstrap-notify
 //= require material/material-dashboard
 //= require material/demo
+//= require leaflet
+
+
+
 //= require_tree .

@@ -16,4 +16,8 @@
  *= require material/material-dashboard.css
  *= require material/demo.css
  *= require leaflet
+ *= require front-css/all
+ *= require front-css/simple-line-icons
+*= require front-css/new-age
+ *= require front-css/bootstrap.min
  */

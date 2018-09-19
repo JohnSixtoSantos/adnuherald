@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get 'page/index'
-  root to: 'page#index'
+  root to: 'page#index2'
 
 	get "browse", to: "data#browse"
 	get "view_data/:coll_id", to: "data#view_data"
