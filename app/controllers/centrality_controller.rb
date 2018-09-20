@@ -1,3 +1,5 @@
+require_relative "Word"
+
 class CentralityController < ApplicationController
 	def select_collection
 		@collections = Collection.all
@@ -33,10 +35,38 @@ class CentralityController < ApplicationController
 		@words = []
 
 		@user_hash.each do |k,v|
-			@words.append([k,v])
+			m = Word.new
+			m.text = k
+			m.weight = v
+
+			@words.append(m)
 		end
 
-		@cloud = MagicCloud::Cloud.new(@words[0...30], rotate: :free, scale: :log)
-		@cloud.draw(1000,1000)
+		#Betweeness Centrality 
+		graph = RGL::DirectedAdjacencyGraph.new
+
+		@user_hash.each do |k, v|
+			graph.add_vertices(k)
+		end
+
+		edge_weights = {}
+
+		@tweets.each do |tweet|
+			i = 0
+
+			@user_hash.each do |k,v|
+				if data_clean(tweet.tweet_text).include? k then
+					arg_edge = [data_clean(tweet.tweet_user), k]
+					if edge_weights[arg_edge] == 0 then
+						edge_weights[arg_edge] += 1
+					else
+						edge_weights[arg_edge] = 0
+					end
+				end
+			end
+		end
+
+		edge_weights.each { |(city1, city2), w| graph.add_edge(city1, city2) }
+		graph.write_to_graphic_file('jpg')
 	end
 end

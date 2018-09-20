@@ -14,6 +14,7 @@
 //= require turbolinks
 //= require front-js/jquery.min
 //= require front-js/jquery.easing.min
+//= require jqcloud
 //= require front-js/bootstrap
 //= require front-js/bootstrap.bundle
 //= require popper
