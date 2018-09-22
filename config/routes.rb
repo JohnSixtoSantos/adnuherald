@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get 'page/index'
   root to: 'page#index2'
-
+  	get "dashboard", to: 'page#index'
 	get "browse", to: "data#browse"
 	get "view_data/:coll_id", to: "data#view_data"
 	get "collections", to: "data#collections"

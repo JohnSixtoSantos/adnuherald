@@ -1,4 +1,8 @@
 require_relative "Word"
+require_relative "Node"
+require_relative "Edge"
+require "rgl/adjacency"
+require "rgl/dot"
 
 class CentralityController < ApplicationController
 	def select_collection
@@ -8,6 +12,8 @@ class CentralityController < ApplicationController
 	def calculate_centrality
 		@tweets = Tweet.where(job_id: params[:collection_id])
 		@usernames = []
+		@nodes = []
+		@edges = []
 		
 		@tweets.each do |tweet|
 			@usernames.append(tweet.tweet_user.downcase)
@@ -18,14 +24,24 @@ class CentralityController < ApplicationController
 		@user_hash = {}
 
 		@usernames.each do |u|
-			@user_hash[u] = 0
+			uclean = data_clean(u)
+			@user_hash[uclean] = 0
+			n = Node.new
+			n.id = uclean
+			n.label = uclean
+			n.size  = 0
+			n.x = rand(1000)
+			n.y = rand(1000)
+
+			@nodes.append(n)
 		end
 
 		@tweets.each do |tweet|
 			i = 0
 			(0...@usernames.length).each do |i|
-				if data_clean(tweet.tweet_text).include? @usernames[i] then
-					@user_hash[@usernames[i]] += 1
+				 clean_username = data_clean(@usernames[i])
+				if data_clean(tweet.tweet_text).include? clean_username then
+					@user_hash[clean_username] += 1
 				end
 			end
 		end
@@ -50,6 +66,7 @@ class CentralityController < ApplicationController
 		end
 
 		edge_weights = {}
+		@in_degrees = {}
 
 		@tweets.each do |tweet|
 			i = 0
@@ -57,16 +74,43 @@ class CentralityController < ApplicationController
 			@user_hash.each do |k,v|
 				if data_clean(tweet.tweet_text).include? k then
 					arg_edge = [data_clean(tweet.tweet_user), k]
-					if edge_weights[arg_edge] == 0 then
-						edge_weights[arg_edge] += 1
+					if edge_weights[arg_edge].nil? then
+						edge_weights[arg_edge] = 1
 					else
-						edge_weights[arg_edge] = 0
+						edge_weights[arg_edge] += 1
+					end
+
+					if @in_degrees[k].nil? then
+						@in_degrees[k] = 1
+					else
+						@in_degrees[k] += 1
 					end
 				end
 			end
 		end
 
 		edge_weights.each { |(city1, city2), w| graph.add_edge(city1, city2) }
-		graph.write_to_graphic_file('jpg')
+
+		i = 0
+		edge_weights.each do |(s, d), w|
+
+			n = Edge.new
+			n.id = "e" + i.to_s
+			n.source = s
+			n.target = d
+			n.size = 1
+			n.color = "#ccc"
+			@edges.append(n)
+
+			i += 1
+		end
+
+		@nodes.each do |n|
+			@in_degrees.each do |k, v|
+				if k == n.label then
+					n.size = v * v
+				end
+			end
+		end
 	end
 end

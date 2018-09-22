@@ -27,7 +27,5 @@
 //= require material/material-dashboard
 //= require material/demo
 //= require leaflet
-
-
-
+//= require sigma.min
 //= require_tree .

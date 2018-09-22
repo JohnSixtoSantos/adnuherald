@@ -10,7 +10,10 @@
                                 <div class="card-body table-responsive">
                                   
                                     <div id="keywords" style="height: 500px; width: 100%">
-                                     </div>
+                                    </div>
+
+                                    <div id="graph-container" style="width: 900px; height: 500px; display: block;">
+                                    </div>
 
                                     <table class="table table-hover">
                                         <thead class="text-warning">
@@ -42,5 +45,17 @@
                 $('#keywords').jQCloud(words, {
                       width: 900,
                       height: 450
+                });
+
+                var g = {
+                            nodes: <%= raw @nodes.to_json %>,
+                            edges: <%= raw @edges.to_json %>
+                };
+
+
+                // Instantiate sigma:
+                s = new sigma({
+                    graph: g,
+                    container: 'graph-container'
                 });
             </script>
