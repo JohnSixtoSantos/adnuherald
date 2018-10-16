@@ -15,6 +15,21 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="tab-content">
+                                      <div class="container-fluid">
+                                        <%= map(
+                                          :center => {
+                                            :latlng => [12.8797, 121.7740], 
+                                            :zoom => 6
+                                          }
+                                        ) %>          
+                                      </div>
+
+                                        <script type="text/javascript">
+                                            var heat = L.heatLayer(
+                                                <%= raw @heat.to_json%>
+                                            , {radius: 30, minOpacity: 0.5,  gradient: {0.1: 'green', 0.5: 'blue', 0.8: 'red'}}).addTo(map);
+                                        </script>
+                                        
                                         <div class="tab-pane active" id="profile">
                                             <%= form_tag({controller: :sentiment, action: :train_model}) do %>
                                             <table class="table">

@@ -101,25 +101,56 @@ class SentimentController < ApplicationController
 			end			
 
 			@train_tweets = stringarr_to_vector(@training_set)
-			@test_tweets = stringarr_to_vector(@testing_set)
+			@test_tweets = stringarr_to_vector(@testing_set)[0...2000]
 
 			model = Liblinear.train(
-		  	{ solver_type: Liblinear::L2R_LR  },   # parameter
+		  	{ solver_type: Liblinear::L2R_L2LOSS_SVC  },   # parameter
 		 	 labels,                       # labels (classes) of training data
-		 	 @train_tweets,
-		 	 1 # training data
+		 	 @train_tweets # training data
 			)
 
 			i = 0
 			matches = 0
 
 			@pred = []
+			@marks = []
+			@heat = []
 
 			@test_tweets.each do |data|
-				@pred.append(Liblinear.predict(model, data))
+				pr = Liblinear.predict(model, data)
+				@pred.append(pr)
+
+				if !@testing_set[i].tweet_lat.nil? then
+					@b = {}
+					@b[:latlng] = [@testing_set[i].tweet_lat, @testing_set[i].tweet_lon]
+					@b[:popup] = @testing_set[i].tweet_text
+
+					if p == 1 then
+						@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png", 
+							:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
+							:icon_size => [25, 41]}
+					elsif p == 0 then
+						@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png", 
+							:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
+							:icon_size => [25, 41]}
+					else
+						@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png", 
+							:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
+							:icon_size => [25, 41]}
+					end
+
+					@marks.append(@b)
+					if pr > 0 then
+						@heat.append([@testing_set[i].tweet_lat, @testing_set[i].tweet_lon, 1])
+					end
+
+					i += 1
+				end
 			end
 
 			@disp_tweets = @testing_set
+
+
 		else
 			@tweets = Tweet.where(job_id: params[:collection_id])
 			

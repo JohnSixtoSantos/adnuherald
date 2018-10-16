@@ -1,11 +1,11 @@
 require 'socket'
-require 'sqlite3'
+
 require 'lda-ruby'
 require_relative 'summarizer'
 
 ENV['RAILS_ENV'] = "development" # Set to your desired Rails environment name
 require '../config/environment.rb'
-require 'active_record'
+
 
 PORT   = 8081
 
@@ -512,7 +512,11 @@ def run_topic_analysis(collection_id, num_topics, num_words, description)
 	corpus = Lda::Corpus.new
 
 	@tweets.each do |r|
-		corpus.add_document(Lda::TextDocument.new(corpus, data_clean(r.tweet_text.to_s)))
+		tx = data_clean(r.tweet_text.to_s)
+
+		if tx != "" then
+			corpus.add_document(Lda::TextDocument.new(corpus, tx))
+		end
 	end
 
 	lda = Lda::Lda.new(corpus)
@@ -543,6 +547,7 @@ def run_topic_analysis(collection_id, num_topics, num_words, description)
 	@n_topic_results.save
 
 	i = 0
+	
 	@topic_mat.each do |row|
 		j = 0
 
@@ -552,11 +557,12 @@ def run_topic_analysis(collection_id, num_topics, num_words, description)
 		@topc.save
 
 		row.each do |item|
-			@n_tword = Word.new
-			@n_tword.word = item
-			@n_tword.order_number = j
-			@n_tword.topic_id = @topc.id
-			@n_tword.save
+			new_word = TopicWord.new
+
+			new_word.word_text = item
+			new_word.order_number = j
+			new_word.topic_id = @topc.id
+			new_word.save
 
 			j += 1
 		end

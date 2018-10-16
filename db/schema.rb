@@ -52,6 +52,14 @@ ActiveRecord::Schema.define(version: 201808121601010) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "topic_words", force: :cascade do |t|
+    t.string "word_text"
+    t.integer "order_number"
+    t.integer "topic_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "topics", force: :cascade do |t|
     t.integer "topic_result_id"
     t.integer "topic_number"
@@ -66,14 +74,6 @@ ActiveRecord::Schema.define(version: 201808121601010) do
     t.string "tweet_user"
     t.datetime "tweet_time"
     t.integer "job_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "words", force: :cascade do |t|
-    t.string "word"
-    t.integer "order_number"
-    t.integer "topic_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

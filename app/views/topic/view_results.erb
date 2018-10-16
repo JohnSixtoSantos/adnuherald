@@ -13,13 +13,13 @@
                                         <tbody>
                                             <% @topics.each do |top| %>
                                                 <tr>
-                                                <% @words = Word.where(topic_id: top.id).order(:order_number) %>
+                                                <% @words = TopicWord.where(topic_id: top.id).order(:order_number) %>
                                                 <th class="text-warning">
                                                     Topic <%= top.topic_number %>
                                                 </th>
                                                 <% @words.each do |c| %>
                                                     <td>
-                                                        <%= c.word %>        
+                                                        <%= c.word_text %>        
                                                     </td>
                                                 <% end %>
                                                 </tr>

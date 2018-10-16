@@ -108,7 +108,7 @@ class CentralityController < ApplicationController
 		@nodes.each do |n|
 			@in_degrees.each do |k, v|
 				if k == n.label then
-					n.size = v * v
+					n.size = v * v * v + 1
 				end
 			end
 		end

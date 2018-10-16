@@ -151,23 +151,25 @@ def summarize(tweets, topic_word, b)
 		tokenized = tokenize(tweet)
 		idx = 0		
 
-		tokenized.each do |token|
-			if token == topic_word then
-				matching_tweets.append(tweet)
-				alignment.append(idx)
-					
-				r_length = tokenized.length - idx - 1
+		
+			tokenized.each do |token|
+				if token == topic_word then
+					matching_tweets.append(tweet)
+					alignment.append(idx)
+						
+					r_length = tokenized.length - idx - 1
 
-				r_lengths.append(r_length)
+					r_lengths.append(r_length)
 
-			if max_r_length < r_length then
-				max_r_length = r_length
+				if max_r_length < r_length then
+					max_r_length = r_length
+				end
+					break
+				end 
+
+				idx += 1
 			end
-				break
-			end 
-
-			idx += 1
-		end
+		
 	end	
 
 	root = WordNode.new(topic_word)
@@ -207,15 +209,3 @@ def summarize(tweets, topic_word, b)
 
 	return (rev + r_sum).chomp
 end
-
-
-#tweets = []
-
-#CSV.foreach("first2000.csv") do |r|
-#	tweets.append(r[1])
-#end
-
-#topic_word = "duterte"
-#b = 5
-
-#puts summarize(tweets, topic_word, b)

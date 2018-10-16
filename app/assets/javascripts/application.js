@@ -28,4 +28,5 @@
 //= require material/demo
 //= require leaflet
 //= require sigma.min
+//= require leaflet-heat
 //= require_tree .

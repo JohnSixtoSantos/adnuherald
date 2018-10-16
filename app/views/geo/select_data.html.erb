@@ -1,12 +1,21 @@
 <div class="content">
   <div class="container-fluid">
+
+
     <%= map(
       :center => {
         :latlng => [12.8797, 121.7740], 
         :zoom => 6
       },
       :markers => @marks
-    ) %>          
+    ) 
+    %>      
   </div>
+    	<script type="text/javascript">
+		var heat = L.heatLayer(
+			<%= raw @heat.to_json%>
+		, {radius: 25}, {minOpacity: 1.0}, {gradient: {0.0: 'red', 1.0: 'blue', 2.0: 'green'}}).addTo(map);
+  	</script>
+
 </div> 
             
