@@ -21,8 +21,12 @@ Rails.application.routes.draw do
 	post "summary", to: "summary#run_summarization"
 	get "centrality", to: "centrality#select_collection"
 	post "centrality", to: "centrality#calculate_centrality"
+
 	get "topic/analyses/:cid", to: "topic#view_result_sets"
 	get "topic/analyses/results/:cid", to: "topic#view_results"
+
+	get "summary/analyses/:cid", to: "summary#view_result_sets"
+	get "summary/analyses/results/:cid", to: "summary#view_results"
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

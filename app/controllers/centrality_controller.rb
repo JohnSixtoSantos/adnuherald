@@ -58,7 +58,7 @@ class CentralityController < ApplicationController
 			@words.append(m)
 		end
 
-		#Betweeness Centrality 
+		#Degree Centrality 
 		graph = RGL::DirectedAdjacencyGraph.new
 
 		@user_hash.each do |k, v|
@@ -80,7 +80,7 @@ class CentralityController < ApplicationController
 						edge_weights[arg_edge] += 1
 					end
 
-					if @in_degrees[k].nil? then
+					if @in_degrees[k].nil? then #ERROR NODE SIZE IS MENTION SIZE NOT DEGREE
 						@in_degrees[k] = 1
 					else
 						@in_degrees[k] += 1

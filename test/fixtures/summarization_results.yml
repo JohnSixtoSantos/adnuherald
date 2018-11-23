@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  root_word: MyString
+  b_value: 1.5
+  summary: MyString
+
+two:
+  root_word: MyString
+  b_value: 1.5
+  summary: MyString

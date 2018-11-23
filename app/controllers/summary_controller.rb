@@ -5,6 +5,11 @@ class SummaryController < ApplicationController
 		@collections = Collection.all
 	end
 
+	def view_result_sets
+		@results = SummarizationResult.where(collection_id: params[:cid]).order(created_at: :desc)
+		@collection = Collection.find(params[:cid])
+	end
+
 	def run_summarization
 		@collection_id = params[:collection_id]
 		@topic_word = params[:tword]

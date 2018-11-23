@@ -43,6 +43,15 @@ ActiveRecord::Schema.define(version: 201808121601010) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "summarization_results", force: :cascade do |t|
+    t.string "root_word"
+    t.float "b_value"
+    t.string "summary"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "collection_id"
+  end
+
   create_table "topic_analysis_results", force: :cascade do |t|
     t.integer "num_topics"
     t.integer "num_words"

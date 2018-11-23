@@ -74,5 +74,7 @@ class DataController < ApplicationController
 				@tweet.save
 			end
 		end
+
+		redirect_to "/collections"
 	end
 end

@@ -601,6 +601,13 @@ def run_summarization(collection_id, topic_word, bval)
 	@result = summarize(@tweets, topic_word.downcase, bval)
 
 	p @result.chomp
+	
+	@n_result = SummarizationResult.new
+	@n_result.root_word = topic_word
+	@n_result.b_value = bval
+	@n_result.summary = @result
+	@n_result.collection_id = collection_id
+	@n_result.save
 
 	@message = Notification.new
 	@message.message = "Summarization Complete!"
