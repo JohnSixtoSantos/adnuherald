@@ -10,17 +10,15 @@ class SummaryController < ApplicationController
 		@topic_word = params[:tword]
 		@bval = params[:bval]
 
-		@raw_tweets = Tweet.where(job_id: @collection_id)
+		socket = TCPSocket.new('0.0.0.0', 8081)
 
-		@tweets = []
+		socket.puts("summary")
+		socket.puts(@collection_id)
+		socket.puts(@topic_word.downcase)
+		socket.puts(@bval.to_f)
 
-		@raw_tweets.each do |t|
-			t = data_clean(t.tweet_text)
-			if t != "" then
-				@tweets.append(t)
-			end
-		end
+		socket.close
 
-		@result = summarize(@tweets, @topic_word.downcase, @bval.to_f)
+		redirect_to "/summary"
 	end
 end

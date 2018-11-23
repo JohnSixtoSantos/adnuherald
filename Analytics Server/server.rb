@@ -1,15 +1,15 @@
 require 'socket'
-
 require 'lda-ruby'
 require_relative 'summarizer'
 
+#CONFIG
 ENV['RAILS_ENV'] = "development" # Set to your desired Rails environment name
 require '../config/environment.rb'
-
 
 PORT   = 8081
 
 socket = TCPServer.new('0.0.0.0', PORT)
+#CONFIG
 
 def unique_words(mat)
 		words = []
@@ -53,450 +53,450 @@ def unique_words(mat)
 		return new_mat
 	end
 
-	def data_clean(s)
-		#remove UTF
-		#remove stopwords c
-		#remove urls c
-		#remove non-alpha c
-		#remove rt c
+def data_clean(s)
+	#remove UTF
+	#remove stopwords c
+	#remove urls c
+	#remove non-alpha c
+	#remove rt c
 
-		@stopwords = [
-			"a",
-			"about",
-			"above",
-			"after",
-			"again",
-			"against",
-			"aking",
-			"ako",
-			"ala",
-			"alin",
-			"all",
-			"am",
-			"amin",
-			"aming",
-			"an",
-			"and",
-			"andun",
-			"ang",
-			"ano",
-			"any",
-			"are",
-			"arent",
-			"as",
-			"at",
-			"ata",
-			"atin",
-			"atin ",
-			"ating",
-			"ay",
-			"ayan",
-			"ayaw",
-			"ayun",
-			"b",
-			"ba",
-			"baba",
-			"bago",
-			"bakit",
-			"bang",
-			"bawat",
-			"be",
-			"because",
-			"been",
-			"before",
-			"being",
-			"below",
-			"between",
-			"both",
-			"buhay",
-			"bukas",
-			"but",
-			"by",
-			"c",
-			"can",
-			"cannot",
-			"cant",
-			"could",
-			"couldnt",
-			"d",
-			"dagdag",
-			"dagdagan",
-			"dahil",
-			"dapat",
-			"datapwat",
-			"daw",
-			"de",
-			"di",
-			"did",
-			"didnt",
-			"din",
-			"dito",
-			"do",
-			"does",
-			"doesnt",
-			"doing",
-			"dont",
-			"doon",
-			"down",
-			"during",
-			"dyan",
-			"e",
-			"each",
-			"eh",
-			"el",
-			"f",
-			"few",
-			"for",
-			"from",
-			"further",
-			"g",
-			"gagawin",
-			"galing",
-			"gawa",
-			"gawin",
-			"gaya",
-			"ginagawa",
-			"ginawa",
-			"gitna",
-			"go",
-			"h",
-			"ha",
-			"habang",
-			"had",
-			"hadnt",
-			"haha",
-			"halika",
-			"halikayo",
-			"hanggang",
-			"has",
-			"hasnt",
-			"have",
-			"havent",
-			"having",
-			"he",
-			"hed",
-			"hell",
-			"her",
-			"here",
-			"heres",
-			"hers",
-			"herself",
-			"hes",
-			"him",
-			"himself",
-			"hindi",
-			"hindi ",
-			"his",
-			"how",
-			"hows",
-			"huwag",
-			"i",
-			"iba",
-			"ibaba",
-			"ibabaw",
-			"id",
-			"if",
-			"ikaw",
-			"ilalim",
-			"ill",
-			"im",
-			"in",
-			"into",
-			"inyong",
-			"is",
-			"isang",
-			"isnt",
-			"it",
-			"itaas",
-			"ito",
-			"its",
-			"itself",
-			"ive",
-			"iyan",
-			"iyo",
-			"iyon",
-			"iyong",
-			"iyun",
-			"j",
-			"k",
-			"ka",
-			"kahit",
-			"kailan",
-			"kami",
-			"kang",
-			"kanila",
-			"kanilang",
-			"kanino",
-			"kanya",
-			"kanyang",
-			"kapag",
-			"kapang",
-			"kapiranggot",
-			"karagdagan",
-			"kasama",
-			"kasi",
-			"kaunti",
-			"kay",
-			"kaya",
-			"kayo",
-			"kaysa",
-			"kelan",
-			"kesa",
-			"ko",
-			"kung",
-			"l",
-			"la",
-			"laban",
-			"labas",
-			"lahat",
-			"lamang",
-			"lang",
-			"lets",
-			"loob",
-			"los",
-			"m",
-			"maaari",
-			"maaaring",
-			"maaring",
-			"mag",
-			"maging",
-			"mang",
-			"mangilan",
-			"may",
-			"mayroon",
-			"me",
-			"meron",
-			"mga",
-			"minsan",
-			"mismo",
-			"mo",
-			"more",
-			"most",
-			"muli",
-			"mustnt",
-			"my",
-			"myself",
-			"n",
-			"na",
-			"nag",
-			"nagawa",
-			"nagkaroon",
-			"nais",
-			"naman",
-			"nandito",
-			"nandoon",
-			"nang",
-			"nanggaling",
-			"napaka",
-			"narito",
-			"nasaan",
-			"nasan",
-			"ng",
-			"nga",
-			"ngunit",
-			"ni",
-			"nilalang",
-			"nito",
-			"niya",
-			"no",
-			"nor",
-			"not",
-			"nung",
-			"nya",
-			"o",
-			"of",
-			"off",
-			"oh",
-			"on",
-			"once",
-			"only",
-			"oo",
-			"or",
-			"other",
-			"ought",
-			"our",
-			"ours",
-			"ourselves",
-			"out",
-			"over",
-			"own",
-			"p",
-			"pa",
-			"paano",
-			"paanong",
-			"pag",
-			"paggawa",
-			"pagitan",
-			"pagkakaroon",
-			"pagkatapos",
-			"pala",
-			"palang",
-			"pamamagitan",
-			"pang",
-			"pano",
-			"papaanong",
-			"para",
-			"parehas",
-			"pareho",
-			"patas",
-			"patay",
-			"pati",
-			"pero",
-			"pinaka",
-			"pinanggalingan",
-			"po",
-			"pwede",
-			"q",
-			"r",
-			"rin",
-			"rt",
-			"s",
-			"sa",
-			"saan",
-			"saka",
-			"same",
-			"san",
-			"sana",
-			"sarado ",
-			"sarili",
-			"shant",
-			"she",
-			"shed",
-			"shell",
-			"shes",
-			"should",
-			"shouldnt",
-			"si",
-			"sila",
-			"sino",
-			"siya",
-			"so",
-			"some",
-			"subalit",
-			"such",
-			"t",
-			"taas",
-			"tapos",
-			"than",
-			"that",
-			"thats",
-			"the",
-			"their",
-			"theirs",
-			"them",
-			"themselves",
-			"then",
-			"there",
-			"theres",
-			"these",
-			"they",
-			"theyd",
-			"theyll",
-			"theyre",
-			"theyve",
-			"this",
-			"those",
-			"through",
-			"to",
-			"too",
-			"tulad",
-			"tungkol",
-			"u",
-			"under",
-			"ung",
-			"until",
-			"up",
-			"v",
-			"very",
-			"via",
-			"w",
-			"wala",
-			"was",
-			"wasnt",
-			"we",
-			"wed",
-			"well",
-			"were",
-			"werent",
-			"weve",
-			"what",
-			"whats",
-			"when",
-			"whens",
-			"where",
-			"wheres",
-			"which",
-			"while",
-			"who",
-			"whom",
-			"whos",
-			"why",
-			"whys",
-			"with",
-			"wont",
-			"would",
-			"wouldnt",
-			"x",
-			"y",
-			"yan",
-			"yang",
-			"yata",
-			"you",
-			"youd",
-			"youll",
-			"your",
-			"youre",
-			"yours",
-			"yourself",
-			"yourselves",
-			"youve",
-			"yung",
-			"z"
-		]
+	@stopwords = [
+		"a",
+		"about",
+		"above",
+		"after",
+		"again",
+		"against",
+		"aking",
+		"ako",
+		"ala",
+		"alin",
+		"all",
+		"am",
+		"amin",
+		"aming",
+		"an",
+		"and",
+		"andun",
+		"ang",
+		"ano",
+		"any",
+		"are",
+		"arent",
+		"as",
+		"at",
+		"ata",
+		"atin",
+		"atin ",
+		"ating",
+		"ay",
+		"ayan",
+		"ayaw",
+		"ayun",
+		"b",
+		"ba",
+		"baba",
+		"bago",
+		"bakit",
+		"bang",
+		"bawat",
+		"be",
+		"because",
+		"been",
+		"before",
+		"being",
+		"below",
+		"between",
+		"both",
+		"buhay",
+		"bukas",
+		"but",
+		"by",
+		"c",
+		"can",
+		"cannot",
+		"cant",
+		"could",
+		"couldnt",
+		"d",
+		"dagdag",
+		"dagdagan",
+		"dahil",
+		"dapat",
+		"datapwat",
+		"daw",
+		"de",
+		"di",
+		"did",
+		"didnt",
+		"din",
+		"dito",
+		"do",
+		"does",
+		"doesnt",
+		"doing",
+		"dont",
+		"doon",
+		"down",
+		"during",
+		"dyan",
+		"e",
+		"each",
+		"eh",
+		"el",
+		"f",
+		"few",
+		"for",
+		"from",
+		"further",
+		"g",
+		"gagawin",
+		"galing",
+		"gawa",
+		"gawin",
+		"gaya",
+		"ginagawa",
+		"ginawa",
+		"gitna",
+		"go",
+		"h",
+		"ha",
+		"habang",
+		"had",
+		"hadnt",
+		"haha",
+		"halika",
+		"halikayo",
+		"hanggang",
+		"has",
+		"hasnt",
+		"have",
+		"havent",
+		"having",
+		"he",
+		"hed",
+		"hell",
+		"her",
+		"here",
+		"heres",
+		"hers",
+		"herself",
+		"hes",
+		"him",
+		"himself",
+		"hindi",
+		"hindi ",
+		"his",
+		"how",
+		"hows",
+		"huwag",
+		"i",
+		"iba",
+		"ibaba",
+		"ibabaw",
+		"id",
+		"if",
+		"ikaw",
+		"ilalim",
+		"ill",
+		"im",
+		"in",
+		"into",
+		"inyong",
+		"is",
+		"isang",
+		"isnt",
+		"it",
+		"itaas",
+		"ito",
+		"its",
+		"itself",
+		"ive",
+		"iyan",
+		"iyo",
+		"iyon",
+		"iyong",
+		"iyun",
+		"j",
+		"k",
+		"ka",
+		"kahit",
+		"kailan",
+		"kami",
+		"kang",
+		"kanila",
+		"kanilang",
+		"kanino",
+		"kanya",
+		"kanyang",
+		"kapag",
+		"kapang",
+		"kapiranggot",
+		"karagdagan",
+		"kasama",
+		"kasi",
+		"kaunti",
+		"kay",
+		"kaya",
+		"kayo",
+		"kaysa",
+		"kelan",
+		"kesa",
+		"ko",
+		"kung",
+		"l",
+		"la",
+		"laban",
+		"labas",
+		"lahat",
+		"lamang",
+		"lang",
+		"lets",
+		"loob",
+		"los",
+		"m",
+		"maaari",
+		"maaaring",
+		"maaring",
+		"mag",
+		"maging",
+		"mang",
+		"mangilan",
+		"may",
+		"mayroon",
+		"me",
+		"meron",
+		"mga",
+		"minsan",
+		"mismo",
+		"mo",
+		"more",
+		"most",
+		"muli",
+		"mustnt",
+		"my",
+		"myself",
+		"n",
+		"na",
+		"nag",
+		"nagawa",
+		"nagkaroon",
+		"nais",
+		"naman",
+		"nandito",
+		"nandoon",
+		"nang",
+		"nanggaling",
+		"napaka",
+		"narito",
+		"nasaan",
+		"nasan",
+		"ng",
+		"nga",
+		"ngunit",
+		"ni",
+		"nilalang",
+		"nito",
+		"niya",
+		"no",
+		"nor",
+		"not",
+		"nung",
+		"nya",
+		"o",
+		"of",
+		"off",
+		"oh",
+		"on",
+		"once",
+		"only",
+		"oo",
+		"or",
+		"other",
+		"ought",
+		"our",
+		"ours",
+		"ourselves",
+		"out",
+		"over",
+		"own",
+		"p",
+		"pa",
+		"paano",
+		"paanong",
+		"pag",
+		"paggawa",
+		"pagitan",
+		"pagkakaroon",
+		"pagkatapos",
+		"pala",
+		"palang",
+		"pamamagitan",
+		"pang",
+		"pano",
+		"papaanong",
+		"para",
+		"parehas",
+		"pareho",
+		"patas",
+		"patay",
+		"pati",
+		"pero",
+		"pinaka",
+		"pinanggalingan",
+		"po",
+		"pwede",
+		"q",
+		"r",
+		"rin",
+		"rt",
+		"s",
+		"sa",
+		"saan",
+		"saka",
+		"same",
+		"san",
+		"sana",
+		"sarado ",
+		"sarili",
+		"shant",
+		"she",
+		"shed",
+		"shell",
+		"shes",
+		"should",
+		"shouldnt",
+		"si",
+		"sila",
+		"sino",
+		"siya",
+		"so",
+		"some",
+		"subalit",
+		"such",
+		"t",
+		"taas",
+		"tapos",
+		"than",
+		"that",
+		"thats",
+		"the",
+		"their",
+		"theirs",
+		"them",
+		"themselves",
+		"then",
+		"there",
+		"theres",
+		"these",
+		"they",
+		"theyd",
+		"theyll",
+		"theyre",
+		"theyve",
+		"this",
+		"those",
+		"through",
+		"to",
+		"too",
+		"tulad",
+		"tungkol",
+		"u",
+		"under",
+		"ung",
+		"until",
+		"up",
+		"v",
+		"very",
+		"via",
+		"w",
+		"wala",
+		"was",
+		"wasnt",
+		"we",
+		"wed",
+		"well",
+		"were",
+		"werent",
+		"weve",
+		"what",
+		"whats",
+		"when",
+		"whens",
+		"where",
+		"wheres",
+		"which",
+		"while",
+		"who",
+		"whom",
+		"whos",
+		"why",
+		"whys",
+		"with",
+		"wont",
+		"would",
+		"wouldnt",
+		"x",
+		"y",
+		"yan",
+		"yang",
+		"yata",
+		"you",
+		"youd",
+		"youll",
+		"your",
+		"youre",
+		"yours",
+		"yourself",
+		"yourselves",
+		"youve",
+		"yung",
+		"z"
+	]
 
-		s = s.downcase
+	s = s.downcase
 
-		splits = s.split(' ')
-		
-		buffer = ""
-		i = 0
+	splits = s.split(' ')
+	
+	buffer = ""
+	i = 0
 
-		stopwords = []
+	stopwords = []
 
-		@stopwords.each do |f|
-			f.each_line do |el|
-				stopwords.append(el)
-			end  		
-		end
-
-		splits.each do |sp|	
-			found = false
-
-			stopwords.each do |sw|
-				
-				if sp.chomp == sw.chomp then
-					found = true
-				end
-			end
-
-			if found == false then
-				if i == 0 then
-					buffer += sp
-					i = 1
-				else
-					buffer += " " + sp
-				end
-			end
-		end
-
-		s = buffer
-		
-		s = s.gsub(/(?:f|ht)tps?:\/[^\s]+/, '') #remove url
-		
-		s = s.gsub(/[^0-9a-z ]/i, '') #removes non-alpha
-		
-		return s
+	@stopwords.each do |f|
+		f.each_line do |el|
+			stopwords.append(el)
+		end  		
 	end
+
+	splits.each do |sp|	
+		found = false
+
+		stopwords.each do |sw|
+			
+			if sp.chomp == sw.chomp then
+				found = true
+			end
+		end
+
+		if found == false then
+			if i == 0 then
+				buffer += sp
+				i = 1
+			else
+				buffer += " " + sp
+			end
+		end
+	end
+
+	s = buffer
+	
+	s = s.gsub(/(?:f|ht)tps?:\/[^\s]+/, '') #remove url
+	
+	s = s.gsub(/[^0-9a-z ]/i, '') #removes non-alpha
+	
+	return s
+end
 
 def run_sentiment_analysis()
 
@@ -543,6 +543,8 @@ def run_topic_analysis(collection_id, num_topics, num_words, description)
 
 	@n_topic_results = TopicAnalysisResult.new
 	@n_topic_results.description = description
+	@n_topic_results.num_topics = num_topics
+	@n_topic_results.num_words = num_words
 	@n_topic_results.collection_id = collection_id
 	@n_topic_results.save
 
@@ -582,24 +584,41 @@ def run_topic_analysis(collection_id, num_topics, num_words, description)
 end
 
 def run_summarization(collection_id, topic_word, bval)
-	@tweets = []
-	
-	t = Tweet.where(job_id: collection_id)
+	puts "Collection ID: " + collection_id.to_s
+	puts "Topic Word: " + topic_word.to_s
+	puts "b-Value: " + bval.to_s
 
-	t.each do |row|
-	 	@tweets.append(data_clean(row.tweet_text))
-	 	
+	@raw_tweets = Tweet.where(job_id: collection_id)
+	@tweets = []
+
+	@raw_tweets.each do |t|
+		t = data_clean(t.tweet_text)
+		if t != "" then
+			@tweets.append(t)
+		end
 	end
 
 	@result = summarize(@tweets, topic_word.downcase, bval)
 
 	p @result.chomp
+
+	@message = Notification.new
+	@message.message = "Summarization Complete!"
+	@message.is_read = false
+	@message.message_type = "analytics"
+
+	@message.save
 end
 
-puts "Listening on #{PORT}. Press CTRL+C to cancel."
+puts "ADNU-Herald Analytics Server v0.1"
 
 loop do
+	puts "Waiting for a connection on port #{PORT}..."
+
 	client = socket.accept
+
+	puts "Connection successful on #{PORT}. Press CTRL+C to cancel."
+
 	job_type = client.gets.chomp
 
 	if job_type == "topic" then
@@ -608,13 +627,18 @@ loop do
 		nw = client.gets.to_i
 		desc = client.gets
 
+		p "Running Topic Analysis"
+
 		Thread.new { run_topic_analysis(c_id, nt, nw, desc) }
 	elsif job_type == "summary" then
 		collection_id = client.gets.to_i
 		topic_word = client.gets
 		bval = client.gets.to_f
 		
+		p "Running Summarization"
 
 		Thread.new { run_summarization(collection_id, topic_word.chomp, bval) }
+	elsif job_type == "sentiment" then
+
 	end
 end

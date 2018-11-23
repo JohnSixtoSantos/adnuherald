@@ -15,7 +15,7 @@ body {
 }
 
 a {
-  color: #fdcc52;
+  color: white;
   -webkit-transition: all .35s;
   transition: all .35s;
 }
@@ -158,9 +158,12 @@ header.masthead {
   padding-top: 150px;
   padding-bottom: 100px;
   color: white;
-  background: url("../bg-pattern.png"), #7b4397;
-  background: url("../bg-pattern.png"), -webkit-gradient(linear, right top, left top, from(#7b4397), to(#dc2430));
-  background: url("../bg-pattern.png"), linear-gradient(to left, #7b4397, #dc2430);
+  background: url("../ateneo.jpg"), #7b4397;
+  background: url("../ateneo.jpg"), -webkit-gradient(linear, right top, left top, from(#7b4397), to(#dc2430));
+  background: url("../ateneo.jpg"), linear-gradient(to left, #7b4397, #dc2430);
+
+    background-position: center;
+  background-size: cover;
 }
 
 header.masthead .header-content {
@@ -238,6 +241,10 @@ section.download .badges .badge-link img {
   }
 }
 
+section.features {
+    text-align: center;
+}
+
 section.features .section-heading {
   margin-bottom: 100px;
 }
@@ -254,6 +261,8 @@ section.features .device-container,
 section.features .feature-item {
   max-width: 325px;
   margin: 0 auto;
+
+    text-align: center;
 }
 
 section.features .device-container {
@@ -289,7 +298,7 @@ section.features .feature-item i {
 section.cta {
   position: relative;
   padding: 250px 0;
-  background-image: url("../bg-cta.jpg");
+  background-image: url("../crowd.jpg");
   background-position: center;
   background-size: cover;
 }

@@ -140,7 +140,6 @@ def sum_left(node)
 end
 
 def summarize(tweets, topic_word, b)
-	puts "error"
 	matching_tweets = []
 	alignment = []
 
@@ -150,8 +149,6 @@ def summarize(tweets, topic_word, b)
 	tweets.each do |tweet|
 		tokenized = tokenize(tweet)
 		idx = 0		
-
-		
 			tokenized.each do |token|
 				if token == topic_word then
 					matching_tweets.append(tweet)

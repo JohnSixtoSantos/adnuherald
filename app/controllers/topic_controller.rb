@@ -2,7 +2,7 @@ require 'lda-ruby'
 
 class TopicController < ApplicationController
 	def view_result_sets
-		@results = TopicAnalysisResult.where(collection_id: params[:cid])
+		@results = TopicAnalysisResult.where(collection_id: params[:cid]).order(created_at: :desc)
 		@collection = Collection.find(params[:cid])
 	end
 
@@ -17,6 +17,7 @@ class TopicController < ApplicationController
 	def run_lda
 		nwords = params[:nwords].to_i
 		ntopics = params[:ntopics].to_i
+		desc = params[:desc]
 		@collection = Collection.find(params[:collection_id])
 		@tweets = Tweet.where(job_id: @collection.id)
 
@@ -29,6 +30,7 @@ class TopicController < ApplicationController
 		socket.puts(@collection.id)
 		socket.puts(ntopics)
 		socket.puts(nwords)
+		socket.puts(desc)
 
 		socket.close
 
