@@ -12,12 +12,13 @@
 //
 //= require rails-ujs
 //= require turbolinks
+//= require jquery
+//= require bootstrap
+//= require popper
 //= require front-js/jquery.min
 //= require front-js/jquery.easing.min
-//= require jqcloud
 //= require front-js/bootstrap
 //= require front-js/bootstrap.bundle
-//= require popper
 //= require front-js/new-age
 //= require material/bootstrap-material-design
 //= require material/perfect-scrollbar.jquery.min
@@ -26,6 +27,7 @@
 //= require material/bootstrap-notify
 //= require material/material-dashboard
 //= require material/demo
+//= require jqcloud
 //= require leaflet
 //= require sigma.min
 //= require leaflet-heat

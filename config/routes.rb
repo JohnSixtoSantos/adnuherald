@@ -28,5 +28,9 @@ Rails.application.routes.draw do
 	get "summary/analyses/:cid", to: "summary#view_result_sets"
 	get "summary/analyses/results/:cid", to: "summary#view_results"
 
+	get "login", to: "users#login"
+	post "login", to: "users#login"
+	get "logout", to: "user#logout"
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

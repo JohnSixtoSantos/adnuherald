@@ -13,12 +13,12 @@
  *= require_tree .
  *= require_self
  *= require font-awesome
- *= require material/material-dashboard.css
- *= require material/demo.css
  *= require leaflet
  *= require jqcloud
  *= require front-css/all
  *= require front-css/simple-line-icons
-*= require front-css/new-age
  *= require front-css/bootstrap.min
+ *= require front-css/new-age
+ *= require material/material-dashboard.css
+ *= require material/demo.css
  */
