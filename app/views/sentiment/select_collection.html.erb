@@ -3,36 +3,34 @@
                 <div class="container-fluid">
 
 		<%= form_tag({controller: :sentiment, action: :process_upload}, multipart: true) do %>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="col-lg-12 col-md-6 col-sm-6">
                             <div class="card card-stats">
                                 <div class="card-header card-header-warning card-header-icon">
                                     <div class="card-icon">
                                         <i class="material-icons">content_copy</i>
 					                   Upload a Labelled Dataset
                                     </div>
-
-                                    <div>
-                                    <%= label_tag(:q, "Select a Tweet CSV file to upload:") %>
-                                    <%= file_field_tag(:tweet_file) %>
-                                    </div>
-
-                                    <div>
-                                    <%= label_tag(:q, "Collection Name:") %>
-                                    <%= text_field_tag(:collection_name) %>  
-                                    </div>
-
-                                    <div>
-                                    <%= label_tag(:q, "Label Set Name:") %>
-                                    <%= text_field_tag(:label_set_name) %> 
-                                    </div>
-
-                                    <div>
-                                    <%= submit_tag("Upload") %>
-                                    </div>
+                                    
                                 </div>
+
+                                
+
                                 <div class="card-footer">
                                     <div class="stats">
+                                       <div>
+                                        
+                                        <%= label_tag(:q, "Select a Tweet CSV file to upload:") %>
+                                        <%= file_field_tag(:tweet_file) %>
+                                        
+                                        <%= label_tag(:q, "Collection Name:") %>
+                                        <%= text_field_tag(:collection_name) %>  
                                        
+                                        <%= label_tag(:q, "Label Set Name:") %>
+                                        <%= text_field_tag(:label_set_name) %> 
+                                        
+                                        <%= submit_tag("Upload") %>
+                                        
+                                        </div>
                                     </div>
                                 </div>
                             </div>

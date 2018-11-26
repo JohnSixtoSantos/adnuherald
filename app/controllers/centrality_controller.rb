@@ -5,6 +5,7 @@ require "rgl/adjacency"
 require "rgl/dot"
 
 class CentralityController < ApplicationController
+
 	def select_collection
 		@collections = Collection.all
 	end

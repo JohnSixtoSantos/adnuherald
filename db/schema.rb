@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 201808121601010) do
     t.string "message_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "link"
   end
 
   create_table "summarization_results", force: :cascade do |t|

@@ -1,5 +1,14 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  before_action :require_login
+
+  	def require_login
+  		if session[:user_id].nil? then 
+  			redirect_to "/"
+  		end
+  	end
+
+
   	def stringarr_to_vector(s)
   		dict = Hash.new
 		words = []

@@ -22,8 +22,8 @@
             </div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
-                    <li class="nav-item active ">
-                        <a class="nav-link" href="/">
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/dashboard">
                             <i class="material-icons">dashboard</i>
                             <p>Dashboard</p>
                         </a>
@@ -68,7 +68,7 @@
             </div>
         </div>
     <div class="main-panel"> 
-        <%= render "shared/nav", notes: Notification.all %>
+        <%= render "shared/nav", notes: Notification.all.order(created_at: :desc) %>
        <%= yield %>
     </div>
   </body>

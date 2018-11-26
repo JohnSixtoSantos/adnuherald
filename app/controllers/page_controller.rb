@@ -1,9 +1,7 @@
 class PageController < ApplicationController
+	skip_before_action :require_login
 
-  def index
-  end
-
-  def index2
-  	render layout: "index2"
-  end
+  	def front_page
+  		render layout: "front_page"
+	end
 end

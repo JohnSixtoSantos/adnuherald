@@ -44,7 +44,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                     <% notes.each do |n| %>
-                                        <a class="dropdown-item" href="#"><%= n.message %></a>
+                                        <a class="dropdown-item" href="<%= n.link %>"><%= n.message %></a>
                                     <% end %>
                                 </div>
                             </li>

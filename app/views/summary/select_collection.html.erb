@@ -31,23 +31,35 @@
                                                             <div class="modal-content">
                                                               <div class="modal-header">
                                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                                <h4 class="modal-title">Supply a Topic Word</h4>
+                                                                
                                                               </div>
                                                                 <%= form_tag({controller: :summary, action: :run_summarization}) do %>
                                                               <div class="modal-body">
-                                                                
-                                                                
+                                                                <div class="card text-center">
+                                                                        <div class="card-header card-header-success">
+                                                                            <h4 class="card-title">Summarization Parameters</h4>
+                                                                            <p class="card-category">Please provide the necessary information to the analyzer.</p>
+                                                                        </div>
 
-                                                                    <div>
-                                                                    <%= label_tag(:q, "Topic Word:") %>
-                                                                    <%= text_field_tag(:tword) %> 
+                                                                        <div class="card-body table-responsive">
+                                                                            <table class="table table-hover">
+                                                                                <tr>
+                                                                                    <td><%= label_tag(:q, "Topic Word:") %></td>
+                                                                                    <td><%= text_field_tag(:tword) %></td>
+                                                                                </tr>
 
-                                                                    <%= label_tag(:q, "b-Value:") %>
-                                                                    <%= text_field_tag(:bval) %> 
+                                                                                <tr>
+                                                                                    <td><%= label_tag(:q, "b-Value:") %></td>
+                                                                                    <td><%= text_field_tag(:bval) %></td>
 
-                                                                    <%= hidden_field_tag(:collection_id, c.id) %>
+                                                                                    <%= hidden_field_tag(:collection_id, c.id) %>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                        <div class="card-footer">
+                                                                              <p class="card-text">  This analysis is going to take a while. Watch out for the notification when its done!</p>
+                                                                        </div>
                                                                     </div>
-
                                                               </div>
                                                               <div class="modal-footer">
                                                                     <%= submit_tag("Run Summarization", class: "btn btn-default") %>
