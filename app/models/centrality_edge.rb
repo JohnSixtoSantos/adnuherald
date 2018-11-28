@@ -1,0 +1,2 @@
+class CentralityEdge < ApplicationRecord
+end

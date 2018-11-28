@@ -12,6 +12,43 @@
 
 ActiveRecord::Schema.define(version: 201808121601010) do
 
+  create_table "centrality_edges", force: :cascade do |t|
+    t.string "source"
+    t.string "target"
+    t.integer "size"
+    t.string "edge_number"
+    t.string "color"
+    t.integer "centrality_result_set_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "centrality_nodes", force: :cascade do |t|
+    t.string "label"
+    t.integer "size"
+    t.integer "x_pos"
+    t.integer "y_pos"
+    t.integer "results_id"
+    t.integer "centrality_result_set_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "centrality_result_sets", force: :cascade do |t|
+    t.string "description"
+    t.integer "collection_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "centrality_user_hashes", force: :cascade do |t|
+    t.string "text"
+    t.float "weight"
+    t.integer "centrality_result_set_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "collections", force: :cascade do |t|
     t.string "collection_name"
     t.datetime "created_at", null: false

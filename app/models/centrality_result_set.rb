@@ -1,0 +1,2 @@
+class CentralityResultSet < ApplicationRecord
+end

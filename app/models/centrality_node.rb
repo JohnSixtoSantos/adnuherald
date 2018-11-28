@@ -1,0 +1,2 @@
+class CentralityNode < ApplicationRecord
+end

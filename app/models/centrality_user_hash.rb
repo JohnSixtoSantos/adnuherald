@@ -1,0 +1,2 @@
+class CentralityUserHash < ApplicationRecord
+end

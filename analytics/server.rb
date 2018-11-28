@@ -2,6 +2,8 @@ require 'socket'
 require 'lda-ruby'
 require 'liblinear'
 require_relative 'summarizer'
+require "rgl/adjacency"
+require "rgl/dot"
 
 #CONFIG
 ENV['RAILS_ENV'] = "development" # Set to your desired Rails environment name
@@ -727,7 +729,156 @@ def run_summarization(collection_id, topic_word, bval)
 end
 
 def run_centrality(collection_id) #for implementation
+	@tweets = Tweet.where(job_id: collection_id)
+	@usernames = []
+	@nodes = []
+	@edges = []
+	
+	@tweets.each do |tweet|
+		@usernames.append(tweet.tweet_user.downcase)
+	end
 
+	@usernames = @usernames.uniq
+	
+	@user_hash = {}
+
+	@usernames.each do |u|
+		uclean = data_clean(u)
+		@user_hash[uclean] = 0
+		n = Node.new
+		n.id = uclean
+		n.label = uclean
+		n.size  = 0
+		n.x = rand(1000)
+		n.y = rand(1000)
+
+		@nodes.append(n)
+	end
+
+	@tweets.each do |tweet|
+		i = 0
+		
+		(0...@usernames.length).each do |i|
+			clean_username = data_clean(@usernames[i])
+
+			if data_clean(tweet.tweet_text).include? clean_username then
+				@user_hash[clean_username] += 1
+			end
+		end
+	end
+
+	@user_hash = @user_hash.sort_by{|k,v| v}.reverse.to_h
+
+	@words = []
+
+	@user_hash.each do |k,v|
+		m = Word.new
+		m.text = k
+		m.weight = v
+
+		@words.append(m)
+	end
+
+	#Degree Centrality 
+	graph = RGL::DirectedAdjacencyGraph.new
+
+	@user_hash.each do |k, v|
+		graph.add_vertices(k)
+	end
+
+	edge_weights = {}
+	@in_degrees = {}
+
+	@tweets.each do |tweet|
+		i = 0
+
+		@user_hash.each do |k,v|
+			if data_clean(tweet.tweet_text).include? k then
+				arg_edge = [data_clean(tweet.tweet_user), k]
+				if edge_weights[arg_edge].nil? then
+					edge_weights[arg_edge] = 1
+				else
+					edge_weights[arg_edge] += 1
+				end
+
+				if @in_degrees[k].nil? then #ERROR NODE SIZE IS MENTION SIZE NOT DEGREE
+					@in_degrees[k] = 1
+				else
+					@in_degrees[k] += 1
+				end
+			end
+		end
+	end
+
+	edge_weights.each { |(city1, city2), w| graph.add_edge(city1, city2) }
+
+	@t_results = CentralityResultSet.new
+	@t_results.description = ""
+	@t_results.collection_id = collection_id
+	@t_results.save
+
+	i = 0
+	edge_weights.each do |(s, d), w|
+
+		# n = Edge.new
+		# n.id = "e" + i.to_s
+		# n.source = s
+		# n.target = d
+		# n.size = 1
+		# n.color = "#ccc"
+		# @edges.append(n)
+
+		@t_edge = CentralityEdge.new
+		@t_edge.edge_number = "e" + i.to_s
+		@t_edge.source = s
+		@t_edge.target = d
+		@t_edge.size = 1
+		@t_edge.color = "#ccc"
+		@t_edge.centrality_result_set_id = @t_results.id
+
+		@t_edge.save
+
+		i += 1
+	end
+
+	@nodes.each do |n|
+		n.size = 1
+
+		@in_degrees.each do |k, v|
+			if k == n.label then
+				n.size = v
+				break
+			end
+		end
+	end
+
+	@nodes.each do |n|
+		@t_node = CentralityNode.new
+		@t_node.label = n.label
+		@t_node.size = n.size
+		@t_node.x_pos = n.x
+		@t_node.y_pos = n.y
+		@t_node.centrality_result_set_id = @t_results.id
+
+		@t_node.save
+	end	
+
+	@user_hash.each do |k,v|
+		@t_uhash = CentralityUserHash.new
+		@t_uhash.text = k
+		@t_uhash.weight = v
+		@t_uhash.centrality_result_set_id = @t_results.id
+
+		@t_uhash.save
+	end
+
+	@message = Notification.new
+	@message.message = "Centrality Analysis Complete!"
+	@message.is_read = false
+	@message.message_type = "analytics"
+	@message.link = "/centrality/analyses/" + collection_id.to_s
+
+	@message.save
 end
 
 puts "ADNU-Herald Analytics Server v0.1"

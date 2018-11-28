@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  label: MyString
+  size: 1
+  x_pos: 1
+  y_pos: 1
+  results_id: 1
+  centrality_result_set_id: 1
+
+two:
+  label: MyString
+  size: 1
+  x_pos: 1
+  y_pos: 1
+  results_id: 1
+  centrality_result_set_id: 1

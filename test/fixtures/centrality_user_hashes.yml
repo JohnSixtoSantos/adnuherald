@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  text: MyString
+  weight: 1.5
+  centrality_result_set_id: 1
+
+two:
+  text: MyString
+  weight: 1.5
+  centrality_result_set_id: 1

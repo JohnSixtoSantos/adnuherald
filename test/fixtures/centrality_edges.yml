@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  source: MyString
+  target: MyString
+  size: 1
+  edge_number: MyString
+  color: MyString
+  centrality_result_set_id: 1
+
+two:
+  source: MyString
+  target: MyString
+  size: 1
+  edge_number: MyString
+  color: MyString
+  centrality_result_set_id: 1
