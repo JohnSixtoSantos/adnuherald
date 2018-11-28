@@ -1,5 +1,6 @@
 require 'socket'
 require 'lda-ruby'
+require 'liblinear'
 require_relative 'summarizer'
 
 #CONFIG
@@ -498,8 +499,114 @@ def data_clean(s)
 	return s
 end
 
-def run_sentiment_analysis()
+def stringarr_to_vector(s)
+	dict = Hash.new
+	words = []
+		
+	s.each do |r|
+		b = r.tweet_text.split(' ')
 
+		b.each do |bw|
+			words.append(bw)
+		end
+	end
+
+	uniques = words.uniq.sort
+	ulen = uniques.length
+
+	ctr = 0
+	uniques.each do |u|
+		dict[u] = ctr
+		ctr += 1
+	end
+
+	dataset = []
+		
+	s.each do |r|
+		bow = Array.new(ulen, 0)
+
+	    b = r.tweet_text.split(' ')
+	    b.each do |bw|
+		    bow[dict[bw]] = 1 
+		end
+
+		dataset.append(bow)
+	end
+
+	return dataset
+end
+
+def run_sentiment_analysis(label_set_id)
+	@label_set_id = label_set_id
+
+	@collection_id = LabelSet.find(@label_set_id).collection_id
+
+	@testing_set = []
+	@training_set = []
+	@testing_set_ids = []
+	@raw_tweets = Tweet.where(job_id: @collection_id)
+	labels = []
+
+	@raw_tweets.each do |t|
+		@temp_label = Label.where(label_set_id: @label_set_id).where(tweet_id: t.id)
+		if @temp_label[0].nil? then
+			ntweet = Tweet.find(t.id)
+			@testing_set.append(ntweet)
+			@testing_set_ids.append(t.id)
+		else
+			ntweet = Tweet.find(t.id)
+			@training_set.append(ntweet)
+			labels.append(@temp_label[0].label)
+		end
+	end			
+
+	@train_tweets = stringarr_to_vector(@training_set)
+	@test_tweets = stringarr_to_vector(@testing_set)
+
+	model = Liblinear.train(
+		{ solver_type: Liblinear::L2R_L2LOSS_SVC  },   # parameter
+		 labels,                       # labels (classes) of training data
+		 @train_tweets # training data
+	)
+
+	i = 0
+	matches = 0
+
+	@pred = []
+	@marks = []
+	@heat = []
+
+	@test_tweets.each do |data|
+		pr = Liblinear.predict(model, data)
+		@pred.append(pr)
+	end
+
+	@sent_lab_set = SentimentLabelSet.new
+	@sent_lab_set.collection_id = @collection_id
+	@sent_lab_set.label_set_id = @label_set_id
+
+	@sent_lab_set.save
+
+	i = 0
+
+	@pred.each do |pr|
+		@lab = Sentiment.new
+		@lab.tweet_id = @testing_set_ids[i]
+		@lab.polarity = pr
+		@lab.sentiment_label_set_id = @sent_lab_set.id
+
+		@lab.save
+
+		i += 1
+	end
+
+	@message = Notification.new
+	@message.message = "Sentiment Analysis Complete!"
+	@message.is_read = false
+	@message.message_type = "analytics"
+	@message.link = "/sentiment/analyses/results/" + @sent_lab_set.id.to_s
+
+	@message.save
 end	
 
 def run_topic_analysis(collection_id, num_topics, num_words, description)
@@ -619,6 +726,10 @@ def run_summarization(collection_id, topic_word, bval)
 	@message.save
 end
 
+def run_centrality(collection_id) #for implementation
+
+end
+
 puts "ADNU-Herald Analytics Server v0.1"
 
 loop do
@@ -648,6 +759,16 @@ loop do
 
 		Thread.new { run_summarization(collection_id, topic_word.chomp, bval) }
 	elsif job_type == "sentiment" then
+		label_set_id = client.gets.to_i
 
+		p "Running Sentiment Analysis"
+
+		Thread.new { run_sentiment_analysis(label_set_id) }
+	elsif job_type == "centrality" then
+		collection_id = client.gets.to_i
+
+		p "Running Centrality Analysis"
+
+		Thread.new { run_centrality(collection_id) } #for implementation
 	end
 end

@@ -2,12 +2,60 @@ require 'liblinear'
 require 'csv'
 
 class SentimentController < ApplicationController
+	def view_results
+		@labeled_sentiments = Sentiment.where(sentiment_label_set_id: params[:cid])
+
+		@heat = []
+		@marks = []
+
+		@labeled_sentiments.each do |t|
+			tweet = Tweet.find(t.tweet_id)
+
+			if !tweet.tweet_lat.nil? then
+				@heat.append([tweet.tweet_lat, tweet.tweet_lon, 1])
+
+				@b = {}
+				@b[:latlng] = [tweet.tweet_lat, tweet.tweet_lon]
+				@b[:popup] = tweet.tweet_text
+
+				p = Sentiment.find_by(tweet_id: tweet.id).polarity
+
+				if p == 1 then
+					@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png", 
+						
+						:icon_size => [25, 41],
+						:icon_anchor => [13, 41],
+						:popup_anchor => [0, -41]}
+				elsif p == 0 then
+					@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png", 
+						
+						:icon_size => [25, 41],
+						:icon_anchor => [13, 41],
+						:popup_anchor => [0, -41]}
+				else
+					@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png", 
+						
+						:icon_size => [25, 41],
+						:icon_anchor => [13, 41],
+						:popup_anchor => [0, -41]}
+				end
+			end
+
+			@marks.append(@b)
+		end
+	end
+
+	def view_result_sets
+		@collection = Collection.find(params[:cid])
+
+		@results = SentimentLabelSet.where(collection_id: @collection).order(created_at: :desc)
+	end
+
 	def select_collection
 		@collections = Collection.all
 	end
 
 	def process_upload
-		puts params
 		@collection = Collection.new
 
 		@collection.collection_name = params[:collection_name]
@@ -77,80 +125,93 @@ class SentimentController < ApplicationController
 			redirect_to "/sentiment"
 
 		elsif params[:commit] == "Use Labeled Set" then
+			p params[:label_set_id]
 			@label_set_id = params[:label_set_id]
 
-			@collection_id = LabelSet.find(@label_set_id).collection_id
+			socket = TCPSocket.new('0.0.0.0', 8081)
+
+			socket.puts("sentiment")
+			socket.puts(@label_set_id)
+
+			socket.close
+
+			redirect_to "/sentiment"
+
+			#inputs
+			#label_set_id
+			#collection id
+			# @label_set_id = params[:label_set_id]
+
+			# @collection_id = LabelSet.find(@label_set_id).collection_id
 			
-			@testing_set = []
-			@training_set = []
-			@raw_tweets = Tweet.where(job_id: @collection_id)
-			labels = []
+			# @testing_set = []
+			# @training_set = []
+			# @raw_tweets = Tweet.where(job_id: @collection_id)
+			# labels = []
 
-			@raw_tweets.each do |t|
-				@temp_label = Label.where(label_set_id: @label_set_id).where(tweet_id: t.id)
-				if @temp_label[0].nil? then
-					ntweet = Tweet.find(t.id)
-					@testing_set.append(ntweet)
-				else
-					ntweet = Tweet.find(t.id)
-					@training_set.append(ntweet)
-					labels.append(@temp_label[0].label)
-					p ntweet
-					p @temp_label[0].label
-				end
-			end			
+			# @raw_tweets.each do |t|
+			# 	@temp_label = Label.where(label_set_id: @label_set_id).where(tweet_id: t.id)
+			# 	if @temp_label[0].nil? then
+			# 		ntweet = Tweet.find(t.id)
+			# 		@testing_set.append(ntweet)
+			# 	else
+			# 		ntweet = Tweet.find(t.id)
+			# 		@training_set.append(ntweet)
+			# 		labels.append(@temp_label[0].label)
+			# 		p ntweet
+			# 		p @temp_label[0].label
+			# 	end
+			# end			
 
-			@train_tweets = stringarr_to_vector(@training_set)
-			@test_tweets = stringarr_to_vector(@testing_set)[0...2000]
+			# @train_tweets = stringarr_to_vector(@training_set)
+			# @test_tweets = stringarr_to_vector(@testing_set)[0...2000]
 
-			model = Liblinear.train(
-		  	{ solver_type: Liblinear::L2R_L2LOSS_SVC  },   # parameter
-		 	 labels,                       # labels (classes) of training data
-		 	 @train_tweets # training data
-			)
+			# model = Liblinear.train(
+		 #  	{ solver_type: Liblinear::L2R_L2LOSS_SVC  },   # parameter
+		 # 	 labels,                       # labels (classes) of training data
+		 # 	 @train_tweets # training data
+			# )
 
-			i = 0
-			matches = 0
+			# i = 0
+			# matches = 0
 
-			@pred = []
-			@marks = []
-			@heat = []
+			# @pred = []
+			# @marks = []
+			# @heat = []
 
-			@test_tweets.each do |data|
-				pr = Liblinear.predict(model, data)
-				@pred.append(pr)
+			# @test_tweets.each do |data|
+			# 	pr = Liblinear.predict(model, data)
+			# 	@pred.append(pr)
 
-				if !@testing_set[i].tweet_lat.nil? then
-					@b = {}
-					@b[:latlng] = [@testing_set[i].tweet_lat, @testing_set[i].tweet_lon]
-					@b[:popup] = @testing_set[i].tweet_text
+			# 	if !@testing_set[i].tweet_lat.nil? then
+			# 		@b = {}
+			# 		@b[:latlng] = [@testing_set[i].tweet_lat, @testing_set[i].tweet_lon]
+			# 		@b[:popup] = @testing_set[i].tweet_text
 
-					if p == 1 then
-						@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png", 
-							:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
-							:icon_size => [25, 41]}
-					elsif p == 0 then
-						@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png", 
-							:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
-							:icon_size => [25, 41]}
-					else
-						@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png", 
-							:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
-							:icon_size => [25, 41]}
-					end
+			# 		if p == 1 then
+			# 			@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png", 
+			# 				:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
+			# 				:icon_size => [25, 41]}
+			# 		elsif p == 0 then
+			# 			@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png", 
+			# 				:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
+			# 				:icon_size => [25, 41]}
+			# 		else
+			# 			@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png", 
+			# 				:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
+			# 				:icon_size => [25, 41]}
+			# 		end
 
-					@marks.append(@b)
-					if pr > 0 then
-						@heat.append([@testing_set[i].tweet_lat, @testing_set[i].tweet_lon, 1])
-					end
+			# 		@marks.append(@b)
+			# 		if pr > 0 then
+			# 			@heat.append([@testing_set[i].tweet_lat, @testing_set[i].tweet_lon, 1])
+			# 		end
 
-					i += 1
-				end
-			end
+			# 		i += 1
+			# 	end
+			# end
 
-			@disp_tweets = @testing_set
-
-
+			# @disp_tweets = @testing_set
 		else
 			@tweets = Tweet.where(job_id: params[:collection_id])
 			

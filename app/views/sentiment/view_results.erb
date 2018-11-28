@@ -1,0 +1,57 @@
+           <div class="content">
+                <div class="container-fluid">
+                    <div class="col-lg-12 col-md-12">
+                            <div class="card">
+                                <div class="card-header card-header-warning">
+                                    <h4 class="card-title">Completed Sentiment Analysis for Collection </h4>
+                                    <p class="card-category">Below is the list of labeled Tweets previously performed with this collection.</p>
+                                </div>
+                                <div class="card-body table-responsive">
+                                    <div class="container-fluid">
+                                        <%= map(
+                                          :center => {
+                                            :latlng => [12.8797, 121.7740], 
+                                            :zoom => 6
+                                          },
+                                            :markers => @marks
+                                        ) %>          
+                                    </div>
+                                    <script type="text/javascript">
+                                        var heat = L.heatLayer(
+                                            <%= raw @heat.to_json%>
+                                        , {radius: 30, minOpacity: 0.5,  gradient: {0.1: 'green', 0.5: 'blue', 0.8: 'red'}}).addTo(map);
+                                    </script>
+                                    <table class="table table-hover">
+                                        <thead class="text-warning">
+                                            <th>
+                                                Tweet
+                                            </th>
+                                            <th>
+                                                Username
+                                            </th>
+                                            <th>
+                                                Time Posted
+                                            </th>
+                                            <th>
+                                                Sentiment Label
+                                            </th>
+                                        </thead>
+                                        <tbody>
+                                            <% @labeled_sentiments.each do |top| %>
+                                                <tr>
+                                                    <td>
+                                                        <% t = Tweet.find(top.tweet_id) %>
+                                                        <%= t.tweet_text %>
+                                                    </td>
+                                                    <td> <%= t.tweet_user %></td>
+                                                    <td> <%= t.tweet_time %></td>
+                                                    <td> <%= top.polarity %></td>
+                                                </tr>
+                                            <% end %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>   
+                </div>
+            </div> 

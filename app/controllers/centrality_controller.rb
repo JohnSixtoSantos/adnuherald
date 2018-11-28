@@ -39,8 +39,10 @@ class CentralityController < ApplicationController
 
 		@tweets.each do |tweet|
 			i = 0
+			
 			(0...@usernames.length).each do |i|
-				 clean_username = data_clean(@usernames[i])
+				clean_username = data_clean(@usernames[i])
+
 				if data_clean(tweet.tweet_text).include? clean_username then
 					@user_hash[clean_username] += 1
 				end
@@ -107,9 +109,12 @@ class CentralityController < ApplicationController
 		end
 
 		@nodes.each do |n|
+			n.size = 1
+
 			@in_degrees.each do |k, v|
 				if k == n.label then
-					n.size = v * v * v + 1
+					n.size = v
+					break
 				end
 			end
 		end

@@ -44,6 +44,21 @@ ActiveRecord::Schema.define(version: 201808121601010) do
     t.string "link"
   end
 
+  create_table "sentiment_label_sets", force: :cascade do |t|
+    t.integer "collection_id"
+    t.integer "label_set_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sentiments", force: :cascade do |t|
+    t.integer "tweet_id"
+    t.integer "sentiment_label_set_id"
+    t.integer "polarity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "summarization_results", force: :cascade do |t|
     t.string "root_word"
     t.float "b_value"
