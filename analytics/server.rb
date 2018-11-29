@@ -5,6 +5,7 @@ require_relative 'summarizer'
 require "rgl/adjacency"
 require "rgl/dot"
 require_relative 'Node'
+require_relative 'Word'
 
 #CONFIG
 ENV['RAILS_ENV'] = "development" # Set to your desired Rails environment name
