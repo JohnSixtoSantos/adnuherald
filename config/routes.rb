@@ -30,6 +30,9 @@ Rails.application.routes.draw do
 	get "sentiment/analyses/:cid", to: "sentiment#view_result_sets"
 	get "sentiment/analyses/results/:cid", to: "sentiment#view_results"
 
+	get "centrality/analyses/:cid", to: "centrality#view_result_sets"
+	get "centrality/analyses/results/:cid", to: "centrality#view_results"
+
 	get "login", to: "users#login"
 	post "login", to: "users#login"
 	get "logout", to: "user#logout"

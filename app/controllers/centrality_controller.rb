@@ -5,10 +5,50 @@ require "rgl/adjacency"
 require "rgl/dot"
 
 class CentralityController < ApplicationController
-	def view_results_set
+	def view_result_sets
+		puts "AAAAAAA"
+		@results = CentralityResultSet.where(collection_id: params[:cid]).order(created_at: :desc)
+		
+		@collection = Collection.find(params[:cid])
 	end
 
 	def view_results
+		@user_hash = CentralityUserHash.where(centrality_result_set_id: params[:cid])
+		@db_nodes = CentralityNode.where(centrality_result_set_id: params[:cid])
+		@db_edges = CentralityEdge.where(centrality_result_set_id: params[:cid])
+
+		@nodes = []
+		@edges = []
+
+		@db_nodes.each do |n|
+			@nodes.append(
+				{
+					"id" => n.label,
+					"label" => n.label,
+					"size" => n.size,
+					"x" => n.x_pos,
+					"y" => n.y_pos
+				}
+			)
+		end
+	# 		n = Edge.new
+	# 		n.id = "e" + i.to_s
+	# 		n.source = s
+	# 		n.target = d
+	# 		n.size = 1
+	# 		n.color = "#ccc"
+		@db_edges.each do |n|
+			@edges.append(
+				{
+					"source" => n.source,
+					"target" => n.target,
+					"size" => n.size,
+					"id" => n.edge_number,
+					"color" => n.color
+				}
+			)
+		end
+
 	end
 
 	def select_collection

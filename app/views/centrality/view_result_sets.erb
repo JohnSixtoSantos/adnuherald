@@ -1,0 +1,42 @@
+         
+           <div class="content">
+                <div class="container-fluid">
+                    <div class="col-lg-12 col-md-12">
+                            <div class="card">
+                                <div class="card-header card-header-warning">
+                                    <h4 class="card-title">Completed Centrality Analyses for Collection <%= @collection.collection_name %> (<%= @collection.created_at %>)</h4>
+                                    <p class="card-category">Below is a list of Centrality analyses previously performed this collection.</p>
+                                </div>
+                                <div class="card-body table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="text-warning">
+                                            <th>Timestamp</th>
+                                            <th>Description</th>
+                                        </thead>
+                                        <tbody>
+                                            <% @results.each do |c| %>
+                                                <tr>
+                                                    <td>
+                                                        <%= c.created_at %>
+                                                    </td>
+
+                                                    <td>
+                                                        <%= c.description %>
+                                                    </td>
+
+
+                                                    <td>
+                                                        <a href="results/<%= c.id %>"><button type="bu/tton" class="btn btn-info btn-lg12">View</button></a>
+                                                    </td>
+                                                </tr>        
+                                            <% end %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    
+                </div>
+            </div> 
+        

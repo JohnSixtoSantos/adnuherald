@@ -9,7 +9,7 @@ require "rgl/dot"
 ENV['RAILS_ENV'] = "development" # Set to your desired Rails environment name
 require '../config/environment.rb'
 
-PORT   = 8081
+PORT = 8081
 
 socket = TCPServer.new('0.0.0.0', PORT)
 #CONFIG
@@ -876,7 +876,7 @@ def run_centrality(collection_id) #for implementation
 	@message.message = "Centrality Analysis Complete!"
 	@message.is_read = false
 	@message.message_type = "analytics"
-	@message.link = "/centrality/analyses/" + collection_id.to_s
+	@message.link = "/centrality/analyses/results/" + @t_results.id.to_s
 
 	@message.save
 end
