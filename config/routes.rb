@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 	root to: 'page#front_page'
+
   	get "dashboard", to: 'dashboard#dashboard'
 	get "browse", to: "data#browse"
 	get "view_data/:coll_id", to: "data#view_data"
