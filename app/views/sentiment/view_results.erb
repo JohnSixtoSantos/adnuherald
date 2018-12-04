@@ -8,19 +8,25 @@
                                 </div>
                                 <div class="card-body table-responsive">
                                     <div class="container-fluid">
+                                       
+
                                         <%= map(
                                           :center => {
                                             :latlng => [12.8797, 121.7740], 
                                             :zoom => 6
                                           },
                                             :markers => @marks
-                                        ) %>          
+                                        ) %>
+          
                                     </div>
+                               
                                     <script type="text/javascript">
                                         var heat = L.heatLayer(
                                             <%= raw @heat.to_json%>
                                         , {radius: 30, minOpacity: 0.5,  gradient: {0.1: 'green', 0.5: 'blue', 0.8: 'red'}}).addTo(map);
                                     </script>
+
+                                    <%= pie_chart @pie %>
                                     <table class="table table-hover">
                                         <thead class="text-warning">
                                             <th>

@@ -6,7 +6,6 @@ require "rgl/dot"
 
 class CentralityController < ApplicationController
 	def view_result_sets
-		puts "AAAAAAA"
 		@results = CentralityResultSet.where(collection_id: params[:cid]).order(created_at: :desc)
 		
 		@collection = Collection.find(params[:cid])

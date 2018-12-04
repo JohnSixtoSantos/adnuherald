@@ -31,4 +31,5 @@
 //= require leaflet
 //= require sigma.min
 //= require leaflet-heat
+//= require chartkick
 //= require_tree .

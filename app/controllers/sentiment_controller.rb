@@ -4,9 +4,14 @@ require 'csv'
 class SentimentController < ApplicationController
 	def view_results
 		@labeled_sentiments = Sentiment.where(sentiment_label_set_id: params[:cid])
+		@pie = Sentiment.where(sentiment_label_set_id: params[:cid]).group(:polarity).count
 
 		@heat = []
 		@marks = []
+		@positive = []
+		@negative = []
+		@neutral = []
+		@layers = []
 
 		@labeled_sentiments.each do |t|
 			tweet = Tweet.find(t.tweet_id)
@@ -26,23 +31,33 @@ class SentimentController < ApplicationController
 						:icon_size => [25, 41],
 						:icon_anchor => [13, 41],
 						:popup_anchor => [0, -41]}
+
+						@positive.append(@b)
 				elsif p == 0 then
 					@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png", 
 						
 						:icon_size => [25, 41],
 						:icon_anchor => [13, 41],
 						:popup_anchor => [0, -41]}
+
+						@neutral.append(@b)
 				else
 					@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png", 
 						
 						:icon_size => [25, 41],
 						:icon_anchor => [13, 41],
 						:popup_anchor => [0, -41]}
+
+						@negative.append(@b)
 				end
 			end
 
 			@marks.append(@b)
 		end
+
+		@layers.append(@positive)
+		@layers.append(@neutral)
+		@layers.append(@negative)
 	end
 
 	def view_result_sets
