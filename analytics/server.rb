@@ -6,6 +6,7 @@ require "rgl/adjacency"
 require "rgl/dot"
 require_relative 'Node'
 require_relative 'Word'
+require_relative 'twitter_collector'
 
 #CONFIG
 ENV['RAILS_ENV'] = "development" # Set to your desired Rails environment name
@@ -759,7 +760,7 @@ def run_centrality(collection_id) #for implementation
 
 	@tweets.each do |tweet|
 		i = 0
-		
+
 		(0...@usernames.length).each do |i|
 			clean_username = data_clean(@usernames[i])
 
@@ -883,12 +884,21 @@ def run_centrality(collection_id) #for implementation
 	@message.save
 end
 
+def start_collection(collection_id, collector)
+	collector.startTracking(collector)
+end
+
+def stop_collection(collector)
+	collector.stopTracking()
+end
+
 puts "ADNU-Herald Analytics Server v0.1"
 
 loop do
 	puts "Waiting for a connection on port #{PORT}..."
 
 	client = socket.accept
+	collector = nil
 
 	puts "Connection successful on #{PORT}. Press CTRL+C to cancel."
 
@@ -922,6 +932,20 @@ loop do
 
 		p "Running Centrality Analysis"
 
-		Thread.new { run_centrality(collection_id) } #for implementation
+		Thread.new { run_centrality(collection_id) } #for implementation	
+	elsif job_type == "start_collection" then
+		collection_id = client.gets.to_i
+		keywords = client.gets.to_s
+
+		collection = TwitterCollector.new(keywords)
+
+		p "Starting Collection"		
+
+		Thread.new { start_collection(collection_id, collector) }	
+	elsif job_type == "stop_collection" then
+
+		p "Stopping Collection"		
+
+		Thread.new { stop_collection(collector) }	
 	end
 end
