@@ -26,7 +26,7 @@ class SentimentController < ApplicationController
 				p = Sentiment.find_by(tweet_id: tweet.id).polarity
 
 				if p == 1 then
-					@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png", 
+					@b[:icon] = {:icon_url => "https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-green.png", 
 						
 						:icon_size => [25, 41],
 						:icon_anchor => [13, 41],
@@ -34,7 +34,7 @@ class SentimentController < ApplicationController
 
 						@positive.append(@b)
 				elsif p == 0 then
-					@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png", 
+					@b[:icon] = {:icon_url => "https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-blue.png", 
 						
 						:icon_size => [25, 41],
 						:icon_anchor => [13, 41],
@@ -42,7 +42,7 @@ class SentimentController < ApplicationController
 
 						@neutral.append(@b)
 				else
-					@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png", 
+					@b[:icon] = {:icon_url => "https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-red.png", 
 						
 						:icon_size => [25, 41],
 						:icon_anchor => [13, 41],
@@ -204,15 +204,15 @@ class SentimentController < ApplicationController
 			# 		@b[:popup] = @testing_set[i].tweet_text
 
 			# 		if p == 1 then
-			# 			@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png", 
+			# 			@b[:icon] = {:icon_url => "https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-green.png", 
 			# 				:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
 			# 				:icon_size => [25, 41]}
 			# 		elsif p == 0 then
-			# 			@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png", 
+			# 			@b[:icon] = {:icon_url => "https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-blue.png", 
 			# 				:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
 			# 				:icon_size => [25, 41]}
 			# 		else
-			# 			@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png", 
+			# 			@b[:icon] = {:icon_url => "https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-red.png", 
 			# 				:shadow_url => "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png", 
 			# 				:icon_size => [25, 41]}
 			# 		end
