@@ -885,14 +885,14 @@ def run_centrality(collection_id) #for implementation
 end
 
 def start_collection(collection_id, collector)
-	collector.startTracking(collector)
+	collector.startTracking(collection_id)
 end
 
 def stop_collection(collector)
 	collector.stopTracking()
 end
 
-puts "ADNU-Herald Analytics Server v0.1"
+puts "ADNU-Herald Analytics Server v0.5"
 
 loop do
 	puts "Waiting for a connection on port #{PORT}..."

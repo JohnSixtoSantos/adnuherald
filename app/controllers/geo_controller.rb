@@ -1,6 +1,6 @@
 class GeoController < ApplicationController
 	def select_data
-		@tweets = Tweet.where(job_id: 1).limit(1000)
+		@tweets = Tweet.where(job_id: 5).where("tweet_lat IS NOT NULL")#.limit(1000)
 
 		@marks = []
 		@heat = []
