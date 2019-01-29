@@ -937,7 +937,7 @@ loop do
 		collection_id = client.gets.to_i
 		keywords = client.gets.to_s
 
-		collection = TwitterCollector.new(keywords)
+		collector = TwitterCollector.new(keywords)
 
 		p "Starting Collection"		
 
@@ -946,6 +946,9 @@ loop do
 
 		p "Stopping Collection"		
 
-		Thread.new { stop_collection(collector) }	
+		if !collector.nil? then
+			Thread.new { stop_collection(collector) }	
+			p "Collection Stopped"
+		end
 	end
 end

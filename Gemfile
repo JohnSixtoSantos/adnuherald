@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-
+gem 'groupdate'
 gem 'leaflet-rails'
 gem 'liblinear-ruby'
 gem 'magic_cloud'

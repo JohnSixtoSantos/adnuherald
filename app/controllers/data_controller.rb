@@ -1,6 +1,40 @@
 require 'csv'
 
 class DataController < ApplicationController
+	def create_job
+		@keywords = params[:keywords]
+		@n_collection = Collection.new
+		@n_collection.collection_name = params[:job_name]
+		@n_collection.save
+
+		p @n_collection.id
+		p @keywords
+
+		socket = TCPSocket.new('0.0.0.0', 8081)
+
+		socket.puts("start_collection")
+		socket.puts(@n_collection.id)
+		socket.puts(@keywords)
+
+		socket.close
+
+		redirect_to "/browse"
+	end
+
+	def stop_job
+		p "Stopping Job"
+
+		socket = TCPSocket.new('0.0.0.0', 8081)
+
+		socket.puts("stop_collection")
+
+		socket.close
+
+		redirect_to "/browse"
+	end
+
+	def new_job
+	end
 
 	def browse
 		@collections = Collection.all

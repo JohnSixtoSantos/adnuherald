@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 	get "topic", to: "topic#select_collection"
 	post "topic", to: "topic#run_lda"
 	get "geo", to: "geo#select_data"
+	post "geo", to: "geo#display_set"
 	get "sentiment", to: "sentiment#select_collection"
 	post "sentiment", to: "sentiment#show_training_page"
 	post "train_sentiment", to: "sentiment#train_model"
@@ -37,6 +38,10 @@ Rails.application.routes.draw do
 	get "login", to: "users#login"
 	post "login", to: "users#login"
 	get "logout", to: "user#logout"
+
+	get "new_job", to: "data#new_job"
+	get "stop_job", to: "data#stop_job"
+	post "new_job", to: "data#create_job"
 
 	get "/:p", to: "page#front_page"
 

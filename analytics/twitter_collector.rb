@@ -24,10 +24,10 @@ class TwitterCollector
 		print "About to configure..."
 
 		TweetStream.configure do |config|
-		  config.consumer_key       = 'x'
-		  config.consumer_secret    = 'x'
-		  config.oauth_token        = 'x'
-		  config.oauth_token_secret = 'x'
+		  config.consumer_key       = 
+		  config.consumer_secret    = 
+		  config.oauth_token        = 
+		  config.oauth_token_secret = 
 		  config.auth_method        = :oauth
 		end
 
@@ -88,11 +88,36 @@ class TwitterCollector
 					flag = true
 				end
 
-				puts "#{status.text}"
+				#puts "#{status.text}"
 
-				tweetstring = quote_string(status.text)
+				t_time = status.attrs[:created_at].split(" ")
+
+				mon_dict = {}
+				mon_dict["Jan"] = "01"
+				mon_dict["Feb"] = "02"
+				mon_dict["Mar"] = "03"
+				mon_dict["Apr"] = "04"
+				mon_dict["May"] = "05"
+				mon_dict["Jun"] = "06"
+				mon_dict["Jul"] = "07"
+				mon_dict["Aug"] = "08"
+				mon_dict["Sep"] = "09"
+				mon_dict["Oct"] = "10"
+				mon_dict["Nov"] = "11"
+				mon_dict["Dec"] = "12"
+
+				tweetstring = ""
+
+
+
+				if status.attrs[:extended_tweet].nil? then
+					tweetstring = quote_string(status.text)
+				else
+					tweetstring = quote_string(status.attrs[:extended_tweet][:full_text])
+				end
+
 				user = status.user.screen_name
-				tweet_created_at = status.attrs[:created_at]
+				tweet_created_at = t_time[5] + "-" + mon_dict[t_time[1]] + "-" + t_time[2] + " " + t_time[3]			
 				server_created_at = Time.now
 
 				#t = Tweet.new
@@ -121,9 +146,11 @@ class TwitterCollector
 				#insertTweet(tweetstring, lat, lon, user, tweet_created_at, collection_id)
 
 
-				ins = @db.prepare("INSERT INTO tweets (tweet_user, tweet_text, tweet_time, tweet_lat, tweet_lon, created_at, updated_at, job_id) VALUES ('#{user}', '#{tweetstring}', '#{server_created_at}', #{lat}, #{lon}, '#{tweet_created_at}', '#{server_created_at}', '#{collection_id}')").execute
+				ins = @db.prepare("INSERT INTO tweets (tweet_user, tweet_text, tweet_time, tweet_lat, tweet_lon, created_at, updated_at, job_id) VALUES ('#{user}', '#{tweetstring}', '#{tweet_created_at}', #{lat}, #{lon}, strftime(\'%Y-%m-%d %H:%M:%S\',\'now\'), strftime(\'%Y-%m-%d %H:%M:%S\',\'now\'), '#{collection_id}')").execute
+				
 				if !@continue then
 					@tclient.stop
+					p "Shutting down collection..."
 					break
 				end
 			end

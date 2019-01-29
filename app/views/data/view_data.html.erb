@@ -9,6 +9,7 @@
                                     <p class="card-category">These are Tweets that you have previously uploaded or collected</p>
                                 </div>
                                 <div class="card-body table-responsive">
+                                    <%= line_chart Tweet.where(job_id: params[:coll_id]).group_by_minute_of_hour(:tweet_time).count %>
                                     <table class="table table-hover">
                                         <thead class="text-warning">
                                             <th>Tweet Text</th>

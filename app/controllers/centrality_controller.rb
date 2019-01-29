@@ -12,7 +12,7 @@ class CentralityController < ApplicationController
 	end
 
 	def view_results
-		@user_hash = CentralityUserHash.where(centrality_result_set_id: params[:cid])
+		@user_hash = CentralityUserHash.where(centrality_result_set_id: params[:cid]).where("weight > 0")
 		@db_nodes = CentralityNode.where(centrality_result_set_id: params[:cid])
 		@db_edges = CentralityEdge.where(centrality_result_set_id: params[:cid])
 
