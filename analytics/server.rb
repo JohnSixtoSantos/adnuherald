@@ -636,6 +636,8 @@ def run_topic_analysis(collection_id, num_topics, num_words, description)
 	lda.num_topics = num_topics
 
 	lda.em("random")
+	p "EM Convergence: "
+	p lda.em_convergence
 
 	topics = lda.top_words(num_words)
 

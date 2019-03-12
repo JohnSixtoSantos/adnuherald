@@ -29,7 +29,8 @@
 //= require material/demo
 //= require jqcloud
 //= require leaflet
-//= require sigma.min
+//= require sigma
+//= require sigma.layout.forceAtlas2/sigma.layout.forceAtlas2
 //= require leaflet-heat
 //= require chartkick
 //= require_tree .

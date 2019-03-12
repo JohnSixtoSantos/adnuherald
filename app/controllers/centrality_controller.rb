@@ -20,15 +20,18 @@ class CentralityController < ApplicationController
 		@edges = []
 
 		@db_nodes.each do |n|
-			@nodes.append(
-				{
-					"id" => n.label,
-					"label" => n.label,
-					"size" => n.size,
-					"x" => n.x_pos,
-					"y" => n.y_pos
-				}
-			)
+			#if n.size > 1 then
+				@nodes.append(
+					{
+						"id" => n.label,
+						"label" => n.label,
+						"size" => n.size ** 3,
+						"x" => n.x_pos,
+						"y" => n.y_pos
+						
+					}
+				)
+			#end
 		end
 	# 		n = Edge.new
 	# 		n.id = "e" + i.to_s
@@ -37,17 +40,63 @@ class CentralityController < ApplicationController
 	# 		n.size = 1
 	# 		n.color = "#ccc"
 		@db_edges.each do |n|
-			@edges.append(
-				{
-					"source" => n.source,
-					"target" => n.target,
-					"size" => n.size,
-					"id" => n.edge_number,
-					"color" => n.color
-				}
-			)
+
+			#source = @nodes.detect{|e| e["label"] == n.source}
+			#target = @nodes.detect{|e| e["label"] == n.target}
+
+			#if !source.nil? && !target.nil? then 
+
+				@edges.append(
+					{
+						"source" => n.source,
+						"target" => n.target,
+						"size" => n.size,
+						"id" => n.edge_number,
+						"color" => n.color
+					}
+				)
+			#end
 		end
 
+		@nodes.delete_if do |n|
+			@edges.detect{|e| e["source"] == n["label"] || e["target"] == n["label"]}.nil? == true
+		end
+
+		node_weights = [] 
+
+		@nodes.each do |n|
+			node_weights.append(n["size"])
+		end
+
+		node_weights.uniq!.sort!.reverse!
+		
+		radius = 0.1
+
+		node_weights.each do |i|
+			len = @nodes.length
+
+			increment = 360.0 / len.to_f
+
+			current_angle = 0
+
+			pi_coef = 3.14159265359 / 180.0
+
+			@nodes.each do |e|
+				if e["size"] == i then
+					radians = current_angle * pi_coef
+
+					x_coor = radius * Math.cos(radians)
+					y_coor = radius * Math.sin(radians)
+
+					e["x"] = x_coor
+					e["y"] = y_coor
+
+					current_angle += increment
+				end
+			end
+
+			radius += 0.1
+		end
 	end
 
 	def select_collection

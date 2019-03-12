@@ -10,7 +10,7 @@
                                     <div id="keywords" style="height: 500px; width: 100%">
                                     </div>
 
-                                    <div id="graph-container" style="width: 100%; height: 500px; display: block;">
+                                    <div id="graph-container" style="width: 100%; height: 800px; display: block;">
                                     </div>
 
                                     <table class="table table-hover">
@@ -37,7 +37,6 @@
                 </div>
             </div> 
             <script type="text/javascript">
-
                 var words = <%= raw @words.to_json %>;
 
 
@@ -47,14 +46,21 @@
                 });
 
                 var g = {
-                            nodes: <%= raw @nodes.to_json %>,
-                            edges: <%= raw @edges.to_json %>
+                    nodes: <%= raw @nodes.to_json %>,
+                    edges: <%= raw @edges.to_json %>
                 };
 
 
                 // Instantiate sigma:
                 s = new sigma({
                     graph: g,
-                    container: 'graph-container'
+                    container: 'graph-container',
                 });
+
+                config = {
+                    gravity: true,
+                    iterationsPerRender: 1
+                };
+
+                //s.startForceAtlas2();
             </script>
