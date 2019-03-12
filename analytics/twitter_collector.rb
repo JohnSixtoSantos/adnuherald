@@ -24,10 +24,10 @@ class TwitterCollector
 		print "About to configure..."
 
 		TweetStream.configure do |config|
-		  config.consumer_key       = "LW41uhmQ11gZVSNk854RZHwB8"
-		  config.consumer_secret    = "Gc88Sa5pdgpdQZiNHZylhxggWOjEGv4khOLPIxorladTCJF3ON"
-		  config.oauth_token        = "2424725288-GGoCuxls4zVFTzkY7uM81SNfZkJw47Ivrojqnct"
-		  config.oauth_token_secret = "63tnd2cGc1b7d1DosKbUUBpLCW9p9TNpwo11lkVN96wmY"
+		  config.consumer_key       = 
+		  config.consumer_secret    = 
+		  config.oauth_token        = 
+		  config.oauth_token_secret = 
 		  config.auth_method        = :oauth
 		end
 
