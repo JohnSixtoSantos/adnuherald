@@ -25,7 +25,7 @@ class CentralityController < ApplicationController
 					{
 						"id" => n.label,
 						"label" => n.label,
-						"size" => n.size ** 3,
+						"size" => n.size,
 						"x" => n.x_pos,
 						"y" => n.y_pos
 						
@@ -97,6 +97,30 @@ class CentralityController < ApplicationController
 
 			radius += 0.1
 		end
+
+		colors = ["#F00", "#B04", "#708", "#30C"]
+
+		@nodes.sort_by!{|n| n["size"]}
+
+		seg_count = 4
+
+		seg_size = @nodes.length.to_i / seg_count
+
+		j = 0
+
+		for i in (0...seg_count)
+			while j < seg_size && j < @nodes.length do
+				@nodes[j]["color"] = colors[i]
+				j += 1
+			end
+
+			seg_size *= 2
+		end
+		
+
+		#colors.each do |c|
+
+		#end
 	end
 
 	def select_collection

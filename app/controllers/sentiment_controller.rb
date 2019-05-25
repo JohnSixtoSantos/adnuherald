@@ -4,7 +4,18 @@ require 'csv'
 class SentimentController < ApplicationController
 	def view_results
 		@labeled_sentiments = Sentiment.where(sentiment_label_set_id: params[:cid])
-		@pie = Sentiment.where(sentiment_label_set_id: params[:cid]).group(:polarity).count
+		@pie = @labeled_sentiments.group(:polarity).count
+
+		@pie = @pie.map do |i,j|
+			if i == 1 then
+				i = "Positive"
+			elsif i == 0 then
+				i = "Neutral"
+			else
+				i = "Negative"
+			end
+			[i,j]
+		end
 
 		@heat = []
 		@marks = []

@@ -1,61 +1,91 @@
            <div class="content">
                 <div class="container-fluid">
                     <div class="col-lg-12 col-md-12">
+
+
                             <div class="card">
-                                <div class="card-header card-header-warning">
+                                <div class="card-header card-header-success">
                                     <h4 class="card-title">Completed Sentiment Analysis for Collection </h4>
                                     <p class="card-category">Below is the list of labeled Tweets previously performed with this collection.</p>
                                 </div>
+
+
                                 <div class="card-body table-responsive">
-                                    <div class="container-fluid">
-                                       
+                                	<div class="card" style="width: 100%">
+	                                   	<div class="card-header text-light bg-dark">
+	                                   		<h5 class="card-title">Sentiment Map</h5>
+	                                   	</div>
+										<div class="card-body">
+											<div>
+		                                        <%= map(
+		                                          :center => {
+		                                            :latlng => [12.8797, 121.7740], 
+		                                            :zoom => 6
+		                                          },
+		                                            :markers => @marks
+		                                        ) %>
+		                                    </div>
+		                                    <script type="text/javascript">
+		                                        var heat = L.heatLayer(
+		                                            <%= raw @heat.to_json%>
+		                                        , {radius: 30, minOpacity: 0.5,  gradient: {0.1: 'green', 0.5: 'blue', 0.8: 'red'}}).addTo(map);
+		                                    </script>
+										</div>
+									</div>
 
-                                        <%= map(
-                                          :center => {
-                                            :latlng => [12.8797, 121.7740], 
-                                            :zoom => 6
-                                          },
-                                            :markers => @marks
-                                        ) %>
-          
-                                    </div>
-                               
-                                    <script type="text/javascript">
-                                        var heat = L.heatLayer(
-                                            <%= raw @heat.to_json%>
-                                        , {radius: 30, minOpacity: 0.5,  gradient: {0.1: 'green', 0.5: 'blue', 0.8: 'red'}}).addTo(map);
-                                    </script>
+									<div class="card" style="width: 100%">
+										<div class="card-header text-white bg-dark">
+                                   			<h5 class="card-title">Sentiment Proportions</h5>
+                                   		</div>
+									  	<div class="card-body">
+									  		<div class="row">
+									  			<div class="col-lg-6">
+									    			<%= pie_chart @pie, download: true, colors: ['red','blue','green'], legend: :bottom %>
+									    		</div>
+									    		<div class="col-lg-6">
+									    			<%= bar_chart @pie, download: true, colors: ['red','blue','green'] %>
+									    		</div>
+									    	</div>
+									 	</div>
+									</div>
 
-                                    <%= pie_chart @pie %>
-                                    <table class="table table-hover">
-                                        <thead class="text-warning">
-                                            <th>
-                                                Tweet
-                                            </th>
-                                            <th>
-                                                Username
-                                            </th>
-                                            <th>
-                                                Time Posted
-                                            </th>
-                                            <th>
-                                                Sentiment Label
-                                            </th>
-                                        </thead>
-                                        <tbody>
-                                            <% @labeled_sentiments.each do |top| %>
-                                                <tr>
-                                                    <td>
-                                                        <% t = Tweet.find(top.tweet_id) %>
-                                                        <%= t.tweet_text %>
-                                                    </td>
-                                                    <td> <%= t.tweet_user %></td>
-                                                    <td> <%= t.tweet_time %></td>
-                                                    <td> <%= top.polarity %></td>
-                                                </tr>
-                                            <% end %>
-                                        </tbody>
-                                    </table>
+                                 	<div class="card" style="width: 100%">
+										<div class="card-header text-white bg-dark">
+                                   			<h5 class="card-title">Tweet Dataset</h5>
+                                   		</div>
+										<div class="card-body">
+		                                    <table class="table table-hover">
+		                                        <thead class="text-warning">
+		                                            <th>
+		                                                Tweet
+		                                            </th>
+		                                            <th>
+		                                                Username
+		                                            </th>
+		                                            <th>
+		                                                Time Posted
+		                                            </th>
+		                                            <th>
+		                                                Sentiment Label
+		                                            </th>
+		                                        </thead>
+		                                        <tbody>
+		                                            <% @labeled_sentiments.each do |top| %>
+		                                                <tr>
+		                                                    <td>
+		                                                        <% t = Tweet.find(top.tweet_id) %>
+		                                                        <%= t.tweet_text %>
+		                                                    </td>
+		                                                    <td> <%= t.tweet_user %></td>
+		                                                    <td> <%= t.tweet_time %></td>
+		                                                    <td> <%= top.polarity %></td>
+		                                                </tr>
+		                                            <% end %>
+		                                        </tbody>
+		                                    </table>
+                                   		</div>
+									</div>
+
                                 </div>
                             </div>
                         </div>   

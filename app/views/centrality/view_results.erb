@@ -55,12 +55,12 @@
                 s = new sigma({
                     graph: g,
                     container: 'graph-container',
+                                        gravity: true,
+                
                 });
 
-                config = {
-                    gravity: true,
-                    iterationsPerRender: 1
-                };
 
-                //s.startForceAtlas2();
+                //s.configForceAtlas2(config);
+
+                s.startForceAtlas2();
             </script>
