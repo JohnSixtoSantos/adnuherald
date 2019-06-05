@@ -9,23 +9,56 @@
                                     <p class="card-category">These are Tweets that you have previously uploaded or collected</p>
                                 </div>
                                 <div class="card-body table-responsive">
-                                    <%= line_chart Tweet.where(job_id: params[:coll_id]).group_by_minute_of_hour(:tweet_time).count %>
-                                    <table class="table table-hover">
-                                        <thead class="text-warning">
-                                            <th>Tweet Text</th>
-                                            <th>User Name</th>
-                                            <th>Time Posted</th>
-                                        </thead>
-                                        <tbody>
-                                            <% @tweets.each do |c| %>
-                                                <tr>
-                                                    <td><%= c.tweet_text %></td>
-                                                    <td><%= c.tweet_user %></td>
-                                                    <td><%= c.tweet_time %></td>
-                                                </tr>
-                                            <% end %>
-                                        </tbody>
-                                    </table>
+                                    <div class="card" style="width: 100%">
+                                        <div class="card-header text-white bg-dark">
+                                            <h5 class="card-title">Time Series Analysis</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    Number of Tweets: <%= @tweets.length %>
+                                                    <%= area_chart @time_tweets %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width: 100%">
+                                        <div class="card-header text-white bg-dark">
+
+                                            <h5 class="card-title">Tweet Length Analysis</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    Average Tweet Length: <%= @avg_word_count %> word(s)
+                                                    <%= column_chart @length_dist, download: true %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width: 100%">
+                                        <div class="card-header text-white bg-dark">
+                                            <h5 class="card-title">Tweetset</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-hover">
+                                                <thead class="text-warning">
+                                                    <th>Tweet Text</th>
+                                                    <th>User Name</th>
+                                                    <th>Time Posted</th>
+                                                </thead>
+                                                <tbody>
+                                                    <% @tweets.each do |c| %>
+                                                        <tr>
+                                                            <td><%= c.tweet_text %></td>
+                                                            <td><%= c.tweet_user %></td>
+                                                            <td><%= c.tweet_time %></td>
+                                                        </tr>
+                                                    <% end %>
+                                                </tbody>
+                                            </table>
+                                          </div>
+                                    </div>  
                                 </div>
                             </div>
                         </div>

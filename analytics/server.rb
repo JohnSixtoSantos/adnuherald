@@ -914,7 +914,8 @@ loop do
 
 		p "Running Topic Analysis"
 
-		Thread.new { run_topic_analysis(c_id, nt, nw, desc) }
+		#Thread.new { run_topic_analysis(c_id, nt, nw, desc) }
+		fork { run_topic_analysis(c_id, nt, nw, desc) }
 	elsif job_type == "summary" then
 		collection_id = client.gets.to_i
 		topic_word = client.gets
@@ -922,19 +923,22 @@ loop do
 		
 		p "Running Summarization"
 
-		Thread.new { run_summarization(collection_id, topic_word.chomp, bval) }
+		#Thread.new { run_summarization(collection_id, topic_word.chomp, bval) }
+		fork { run_summarization(collection_id, topic_word.chomp, bval) }
 	elsif job_type == "sentiment" then
 		label_set_id = client.gets.to_i
 
 		p "Running Sentiment Analysis"
 
-		Thread.new { run_sentiment_analysis(label_set_id) }
+		#Thread.new { run_sentiment_analysis(label_set_id) }
+		fork { run_sentiment_analysis(label_set_id) }
 	elsif job_type == "centrality" then
 		collection_id = client.gets.to_i
 
 		p "Running Centrality Analysis"
 
-		Thread.new { run_centrality(collection_id) } #for implementation	
+		#Thread.new { run_centrality(collection_id) } #for implementation	
+		fork { run_centrality(collection_id) }
 	elsif job_type == "start_collection" then
 		collection_id = client.gets.to_i
 		keywords = client.gets.to_s

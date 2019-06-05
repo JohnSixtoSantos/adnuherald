@@ -1,4 +1,5 @@
 require 'csv'
+require 'whatlanguage'
 
 class DataController < ApplicationController
 	def create_job
@@ -75,6 +76,28 @@ class DataController < ApplicationController
 
 	def view_data
 		@tweets = Tweet.where(job_id: params[:coll_id])
+
+		@tweet_count = @tweets.length
+		@sum_word_count = 0
+		@length_dist = {}
+
+		@tweets.each do |t|
+			tweet = t
+
+			t_length = tweet.tweet_text.split(" ").length
+
+			@sum_word_count += t_length
+
+			if @length_dist[t_length].nil? then 
+				@length_dist[t_length] = 1
+			else
+				@length_dist[t_length] += 1
+			end
+		end
+
+		@avg_word_count = @sum_word_count / @tweet_count
+
+		@time_tweets = Tweet.where(job_id: params[:coll_id]).group_by_day(:tweet_time).count
 	end
 
 	def collections

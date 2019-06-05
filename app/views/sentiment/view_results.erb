@@ -16,20 +16,22 @@
 	                                   		<h5 class="card-title">Sentiment Map</h5>
 	                                   	</div>
 										<div class="card-body">
-											<div>
-		                                        <%= map(
-		                                          :center => {
-		                                            :latlng => [12.8797, 121.7740], 
-		                                            :zoom => 6
-		                                          },
-		                                            :markers => @marks
-		                                        ) %>
-		                                    </div>
-		                                    <script type="text/javascript">
-		                                        var heat = L.heatLayer(
-		                                            <%= raw @heat.to_json%>
-		                                        , {radius: 30, minOpacity: 0.5,  gradient: {0.1: 'green', 0.5: 'blue', 0.8: 'red'}}).addTo(map);
-		                                    </script>
+											<% if @marks.length > 0 then %>
+												<div>
+			                                        <%= map(
+			                                          :center => {
+			                                            :latlng => [12.8797, 121.7740], 
+			                                            :zoom => 6
+			                                          },
+			                                            :markers => @marks
+			                                        ) %>
+			                                    </div>
+			                                    <script type="text/javascript">
+			                                        var heat = L.heatLayer(
+			                                            <%= raw @heat.to_json%>
+			                                        , {radius: 30, minOpacity: 0.5,  gradient: {0.1: 'green', 0.5: 'blue', 0.8: 'red'}}).addTo(map);
+			                                    </script>
+		                                    <% end %>
 										</div>
 									</div>
 
@@ -44,6 +46,20 @@
 									    		</div>
 									    		<div class="col-lg-6">
 									    			<%= bar_chart @pie, download: true, colors: ['red','blue','green'] %>
+									    		</div>
+									    	</div>
+									 	</div>
+									</div>
+
+									<div class="card" style="width: 100%">
+										<div class="card-header text-white bg-dark">
+                                   			<h5 class="card-title">Sentiment Proportions</h5>
+                                   		</div>
+									  	<div class="card-body">
+									  		<div class="row">
+									  			<div class="col-lg-12">
+									    			Average Tweet Length: <%= @avg_word_count %> word(s)
+									    			<%= column_chart @length_dist, download: true %>
 									    		</div>
 									    	</div>
 									 	</div>

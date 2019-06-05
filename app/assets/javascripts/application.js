@@ -33,4 +33,5 @@
 //= require sigma.layout.forceAtlas2/sigma.layout.forceAtlas2
 //= require leaflet-heat
 //= require chartkick
+//= require Chart.bundle
 //= require_tree .

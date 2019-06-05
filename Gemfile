@@ -14,6 +14,7 @@ gem 'rgl'
 gem "chartkick"
 gem 'tweetstream'
 gem 'json'
+gem 'whatlanguage'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.6'

@@ -4,6 +4,9 @@ require 'csv'
 class SentimentController < ApplicationController
 	def view_results
 		@labeled_sentiments = Sentiment.where(sentiment_label_set_id: params[:cid])
+
+		@tweet_count = @labeled_sentiments.length
+
 		@pie = @labeled_sentiments.group(:polarity).count
 
 		@pie = @pie.map do |i,j|
@@ -24,10 +27,27 @@ class SentimentController < ApplicationController
 		@neutral = []
 		@layers = []
 
+		@geo_count = 0
+
+		@sum_word_count = 0
+		@length_dist = {}
+
 		@labeled_sentiments.each do |t|
 			tweet = Tweet.find(t.tweet_id)
 
-			if !tweet.tweet_lat.nil? then
+			t_length = tweet.tweet_text.split(" ").length
+
+			@sum_word_count += t_length
+
+			if @length_dist[t_length].nil? then 
+				@length_dist[t_length] = 1
+			else
+				@length_dist[t_length] += 1
+			end
+
+			if !tweet.tweet_lat.nil? || !tweet.tweet_lon.nil? then
+				@geo_count += 1
+
 				@heat.append([tweet.tweet_lat, tweet.tweet_lon, 1])
 
 				@b = {}
@@ -61,10 +81,12 @@ class SentimentController < ApplicationController
 
 						@negative.append(@b)
 				end
-			end
 
-			@marks.append(@b)
+				@marks.append(@b)
+			end
 		end
+
+		@avg_word_count = @sum_word_count / @tweet_count
 
 		@layers.append(@positive)
 		@layers.append(@neutral)

@@ -1,6 +1,6 @@
 class GeoController < ApplicationController
 	def select_data
-		@tweets = Tweet.where(job_id: 6).where("tweet_lat IS NOT NULL")#.limit(1000)
+		@tweets = Tweet.where(job_id: 21).where("tweet_lat IS NOT NULL")#.limit(1000)
 
 		@marks = []
 		@heat = []
@@ -9,7 +9,11 @@ class GeoController < ApplicationController
 			@b = {}
 			@b[:latlng] = [t.tweet_lat, t.tweet_lon]
 			@b[:popup] = t.tweet_text
-			@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png", :icon_size => [25, 41]}
+			@b[:icon] = {:icon_url => "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+
+						:icon_size => [25, 41],
+						:icon_anchor => [13, 41],
+						:popup_anchor => [0, -41]}
 			@marks.append(@b)
 
 			#@heat.append([t.tweet_lat, t.tweet_lon])
