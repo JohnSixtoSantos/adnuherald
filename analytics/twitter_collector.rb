@@ -108,8 +108,6 @@ class TwitterCollector
 
 				tweetstring = ""
 
-
-
 				if status.attrs[:extended_tweet].nil? then
 					tweetstring = quote_string(status.text)
 				else
@@ -144,7 +142,6 @@ class TwitterCollector
 				#t.save
 
 				#insertTweet(tweetstring, lat, lon, user, tweet_created_at, collection_id)
-
 
 				ins = @db.prepare("INSERT INTO tweets (tweet_user, tweet_text, tweet_time, tweet_lat, tweet_lon, created_at, updated_at, job_id) VALUES ('#{user}', '#{tweetstring}', '#{tweet_created_at}', #{lat}, #{lon}, strftime(\'%Y-%m-%d %H:%M:%S\',\'now\'), strftime(\'%Y-%m-%d %H:%M:%S\',\'now\'), '#{collection_id}')").execute
 				

@@ -95,7 +95,11 @@ class DataController < ApplicationController
 			end
 		end
 
-		@avg_word_count = @sum_word_count / @tweet_count
+		if @tweet_count > 0 then
+			@avg_word_count = @sum_word_count / @tweet_count
+		else
+			@avg_word_count = 0
+		end
 
 		@time_tweets = Tweet.where(job_id: params[:coll_id]).group_by_day(:tweet_time).count
 	end
