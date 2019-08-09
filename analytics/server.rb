@@ -770,8 +770,8 @@ def run_centrality(collection_id, subset_size) #for implementation
 	
 	#mass clean
 	@tweets.map do |tweet|
-		tweet.tweet_user = data_clean(tweet.tweet_user)
-		tweet.tweet_text = data_clean(tweet.tweet_text)
+		#tweet.tweet_user = data_clean(tweet.tweet_user)
+		#tweet.tweet_text = data_clean(tweet.tweet_text)
 
 		@usernames.append(tweet.tweet_user)
 	end
