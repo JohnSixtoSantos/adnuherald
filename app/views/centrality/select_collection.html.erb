@@ -40,6 +40,11 @@
                                                                     <%= hidden_field_tag(:collection_id, c.id) %>
                                                                     </div>
 
+                                                                    <div>
+                                                                        Random Sample Size (leave as empty if all is desired):
+                                                                        <%= text_field_tag(:subset_size) %>
+                                                                    </div>
+
                                                               </div>
                                                               <div class="modal-footer">
                                                                     <%= submit_tag("Yes", class: "btn btn-default") %>

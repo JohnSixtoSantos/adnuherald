@@ -132,11 +132,21 @@ class CentralityController < ApplicationController
 		#Tweet Set
 
 		@collection_id = params[:collection_id]
+		@subset_size = -1
+
+		if(!params[:subset_size].nil? && params[:subset_size].to_i >= 1)
+			@subset_size = params[:subset_size].to_i
+
+			puts "SUBSET SIZE: " + @subset_size.to_s
+		end
+
+		
 
 		socket = TCPSocket.new('0.0.0.0', 8081)
 
 		socket.puts("centrality")
 		socket.puts(@collection_id)
+		socket.puts(@subset_size)
 
 		socket.close
 

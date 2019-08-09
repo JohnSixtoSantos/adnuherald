@@ -18,46 +18,46 @@ socket = TCPServer.new('0.0.0.0', PORT)
 #CONFIG
 
 def unique_words(mat)
-		words = []
+	words = []
 
-		mat.each do |row|
-			row.each do |item|
-				words.append(item)
-			end
+	mat.each do |row|
+		row.each do |item|
+			words.append(item)
 		end
-
-		words = words.uniq
-
-		counts = {}
-
-		words.each do |word|
-			counts[word] = 0
-		end
-
-		mat.each do |row|
-			row.each do |item|
-				counts[item] += 1
-			end
-		end	
-
-		new_mat = []
-
-		mat.each do |row|
-
-			temp_row = []
-
-			row.each do |item|
-				if counts[item] == 1 then
-					#copy to new mat
-					temp_row.append(item)
-				end
-			end
-
-			new_mat.append(temp_row)
-		end
-
-		return new_mat
 	end
+
+	words = words.uniq
+
+	counts = {}
+
+	words.each do |word|
+		counts[word] = 0
+	end
+
+	mat.each do |row|
+		row.each do |item|
+			counts[item] += 1
+		end
+	end	
+
+	new_mat = []
+
+	mat.each do |row|
+
+		temp_row = []
+
+		row.each do |item|
+			if counts[item] == 1 then
+				#copy to new mat
+				temp_row.append(item)
+			end
+		end
+
+		new_mat.append(temp_row)
+	end
+
+	return new_mat
+end
 
 def data_clean(s)
 	#remove UTF
@@ -507,6 +507,10 @@ end
 def stringarr_to_vector(s)
 	dict = Hash.new
 	words = []
+
+	s.map do |r|
+		r.tweet_text = data_clean(r.tweet_text)
+	end
 		
 	s.each do |r|
 		b = r.tweet_text.split(' ')
@@ -569,7 +573,7 @@ def run_sentiment_analysis(label_set_id)
 	@test_tweets = stringarr_to_vector(@testing_set)
 
 	model = Liblinear.train(
-		{ solver_type: Liblinear::L2R_L2LOSS_SVC  },   # parameter
+		{ solver_type: Liblinear::MCSVM_CS  },   # parameter
 		 labels,                       # labels (classes) of training data
 		 @train_tweets # training data
 	)
@@ -585,6 +589,24 @@ def run_sentiment_analysis(label_set_id)
 		pr = Liblinear.predict(model, data)
 		@pred.append(pr)
 	end
+
+	results = Liblinear.cross_validation(5, { solver_type: Liblinear::MCSVM_CS }, labels, @train_tweets)
+
+	i = 0
+	matching = 0
+
+	results.each do |r|
+		puts r.to_s + " " + labels[i].to_s
+
+		if r.to_i == labels[i].to_i then
+			matching += 1
+		end
+
+		i += 1
+	end
+
+	puts "Matching: " + matching.to_s
+	puts "Accuracy: " + (matching.to_f / @train_tweets.length.to_f).to_s
 
 	@sent_lab_set = SentimentLabelSet.new
 	@sent_lab_set.collection_id = @collection_id
@@ -733,14 +755,25 @@ def run_summarization(collection_id, topic_word, bval)
 	@message.save
 end
 
-def run_centrality(collection_id) #for implementation
-	@tweets = Tweet.where(job_id: collection_id)
+def run_centrality(collection_id, subset_size) #for implementation
+	if(subset_size < 1) then
+			subset_size = Tweet.all.count
+	end
+
+	puts "Collection ID: " + collection_id.to_s
+	puts "Subset Size: " + subset_size.to_s
+
+	@tweets = Tweet.where(job_id: collection_id).order("RANDOM()").limit(subset_size)
 	@usernames = []
 	@nodes = []
 	@edges = []
 	
-	@tweets.each do |tweet|
-		@usernames.append(tweet.tweet_user.downcase)
+	#mass clean
+	@tweets.map do |tweet|
+		tweet.tweet_user = data_clean(tweet.tweet_user)
+		tweet.tweet_text = data_clean(tweet.tweet_text)
+
+		@usernames.append(tweet.tweet_user)
 	end
 
 	@usernames = @usernames.uniq
@@ -748,7 +781,7 @@ def run_centrality(collection_id) #for implementation
 	@user_hash = {}
 
 	@usernames.each do |u|
-		uclean = data_clean(u)
+		uclean = u
 		@user_hash[uclean] = 0
 		n = Node.new
 		n.id = uclean
@@ -764,9 +797,9 @@ def run_centrality(collection_id) #for implementation
 		i = 0
 
 		(0...@usernames.length).each do |i|
-			clean_username = data_clean(@usernames[i])
+			clean_username = @usernames[i]
 
-			if data_clean(tweet.tweet_text).include? clean_username then
+			if tweet.tweet_text.include? clean_username then
 				@user_hash[clean_username] += 1
 			end
 		end
@@ -798,8 +831,8 @@ def run_centrality(collection_id) #for implementation
 		i = 0
 
 		@user_hash.each do |k,v|
-			if data_clean(tweet.tweet_text).include? k then
-				arg_edge = [data_clean(tweet.tweet_user), k]
+			if tweet.tweet_text.include? k then
+				arg_edge = [tweet.tweet_user, k]
 				if edge_weights[arg_edge].nil? then
 					edge_weights[arg_edge] = 1
 				else
@@ -934,11 +967,12 @@ loop do
 		fork { run_sentiment_analysis(label_set_id) }
 	elsif job_type == "centrality" then
 		collection_id = client.gets.to_i
+		subset_size = client.gets.to_i
 
 		p "Running Centrality Analysis"
 
 		#Thread.new { run_centrality(collection_id) } #for implementation	
-		fork { run_centrality(collection_id) }
+		fork { run_centrality(collection_id, subset_size) }
 	elsif job_type == "start_collection" then
 		collection_id = client.gets.to_i
 		keywords = client.gets.to_s
