@@ -831,15 +831,18 @@ def run_centrality(collection_id, subset_size) #for implementation
 		i = 0
 
 		@user_hash.each do |k,v|
-			if tweet.tweet_text.include? k then
+			if tweet.tweet_user != k && (tweet.tweet_text.include? k) then
+
+				puts tweet.tweet_user + " " + k
 				arg_edge = [tweet.tweet_user, k]
+
 				if edge_weights[arg_edge].nil? then
 					edge_weights[arg_edge] = 1
 				else
 					edge_weights[arg_edge] += 1
 				end
 
-				if @in_degrees[k].nil? then #ERROR NODE SIZE IS MENTION SIZE NOT DEGREE
+				if @in_degrees[k].nil? then 
 					@in_degrees[k] = 1
 				else
 					@in_degrees[k] += 1

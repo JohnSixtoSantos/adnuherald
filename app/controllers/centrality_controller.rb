@@ -62,41 +62,41 @@ class CentralityController < ApplicationController
 			@edges.detect{|e| e["source"] == n["label"] || e["target"] == n["label"]}.nil? == true
 		end
 
-		node_weights = [] 
+		#node_weights = [] 
 
-		@nodes.each do |n|
-			node_weights.append(n["size"])
-		end
+		# @nodes.each do |n|
+		# 	node_weights.append(n["size"])
+		# end
 
-		node_weights.uniq!.sort!.reverse!
+		# node_weights.uniq!.sort!.reverse!
 		
-		radius = 0.1
+		# radius = 0.1
 
-		node_weights.each do |i|
-			len = @nodes.length
+		# node_weights.each do |i|
+		# 	len = @nodes.length
 
-			increment = 360.0 / len.to_f
+		# 	increment = 360.0 / len.to_f
 
-			current_angle = 0
+		# 	current_angle = 0
 
-			pi_coef = 3.14159265359 / 180.0
+		# 	pi_coef = 3.14159265359 / 180.0
 
-			@nodes.each do |e|
-				if e["size"] == i then
-					radians = current_angle * pi_coef
+		# 	@nodes.each do |e|
+		# 		if e["size"] == i then
+		# 			radians = current_angle * pi_coef
 
-					x_coor = radius * Math.cos(radians)
-					y_coor = radius * Math.sin(radians)
+		# 			x_coor = radius * Math.cos(radians)
+		# 			y_coor = radius * Math.sin(radians)
 
-					e["x"] = x_coor
-					e["y"] = y_coor
+		# 			e["x"] = x_coor
+		# 			e["y"] = y_coor
 
-					current_angle += increment
-				end
-			end
+		# 			current_angle += increment
+		# 		end
+		# 	end
 
-			radius += 0.1
-		end
+		# 	radius += 0.1
+		# end
 
 		colors = ["#F00", "#B04", "#708", "#30C"]
 
@@ -116,11 +116,6 @@ class CentralityController < ApplicationController
 
 			seg_size *= 2
 		end
-		
-
-		#colors.each do |c|
-
-		#end
 	end
 
 	def select_collection
