@@ -2,6 +2,14 @@ require 'csv'
 require 'whatlanguage'
 
 class DataController < ApplicationController
+	def export
+		collection_id = params[:id]
+
+		@tweets = Tweet.where(job_id: collection_id)
+
+		send_data @tweets.to_csv, filename: "export.csv"
+	end
+
 	def create_job
 		@keywords = params[:keywords]
 		@n_collection = Collection.new
@@ -76,6 +84,7 @@ class DataController < ApplicationController
 
 	def view_data
 		@tweets = Tweet.where(job_id: params[:coll_id])
+		@job_id = params[:coll_id]
 
 		@tweet_count = @tweets.length
 		@sum_word_count = 0

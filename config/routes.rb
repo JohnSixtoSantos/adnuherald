@@ -45,5 +45,7 @@ Rails.application.routes.draw do
 
 	get "/:p", to: "page#front_page"
 
+	get "/export/:id", to: "data#export"
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

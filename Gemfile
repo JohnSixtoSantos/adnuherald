@@ -6,6 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 #ADNU-HERALD Dependencies
+gem 'csv'
 gem 'sigma-rails'
 gem 'groupdate'
 gem 'leaflet-rails'
