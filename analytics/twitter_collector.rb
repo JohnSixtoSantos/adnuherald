@@ -17,6 +17,7 @@ class TwitterCollector
 	@db_password = ""
 	@conn = nil
 	@db= nil
+	@tclient = nil
 
 	def initialize(words)
 		puts "Connecting to Twitter API"
@@ -24,10 +25,10 @@ class TwitterCollector
 		print "About to configure..."
 
 		TweetStream.configure do |config|
-		  config.consumer_key       = ""
-		  config.consumer_secret    = ""
-		  config.oauth_token        = ""
-		  config.oauth_token_secret = ""
+		  config.consumer_key       = "LW41uhmQ11gZVSNk854RZHwB8"
+		  config.consumer_secret    = "Gc88Sa5pdgpdQZiNHZylhxggWOjEGv4khOLPIxorladTCJF3ON"
+		  config.oauth_token        = "2424725288-GGoCuxls4zVFTzkY7uM81SNfZkJw47Ivrojqnct"
+		  config.oauth_token_secret = "63tnd2cGc1b7d1DosKbUUBpLCW9p9TNpwo11lkVN96wmY"
 		  config.auth_method        = :oauth
 		end
 
@@ -59,6 +60,7 @@ class TwitterCollector
 
 	def stopTracking()
 		@continue = false
+		@tclient.stop
 	end
 
 	def herp
@@ -114,6 +116,37 @@ class TwitterCollector
 					tweetstring = quote_string(status.attrs[:extended_tweet][:full_text])
 				end
 
+				if !status.attrs[:retweeted_status].nil? && !status.attrs[:retweeted_status][:extended_tweet].nil? then
+					tweetstring = tweetstring + " $$$$$***** " + status.attrs[:retweeted_status][:extended_tweet][:full_text]
+
+					#split handler
+					s = tweetstring.split("$$$$$*****") #split retweet text (left) and original tweet (on the right)
+	
+					t = "" #accumulator for the string 
+
+					if s.length > 1 then #if s.length is > 1 then there is a retweet portion of the tweet otherwise it is an original tweet
+										#remember to count how many times this happends
+						t = s[1] #s[0] is the original, s[1] is the retweet text
+								
+						names = s[0].split(" ") #split original tweet by blank text
+
+						t = names[0] + " " + names[1] + " " + t #append the RT info to the full length retweet source tweet
+					else
+						t = s[0]	#if there is no retweet part, then ignore the retweet portion of the string 
+					end
+
+					t.chomp.gsub(/\s+/, " ")
+					#split handler
+
+					tweetstring = t
+
+					tweetstring = quote_string(tweetstring)
+
+					puts status.attrs[:retweeted_status][:extended_tweet][:full_text]
+				end
+
+				puts status.attrs[:user][:location]
+
 				user = status.user.screen_name
 				tweet_created_at = t_time[5] + "-" + mon_dict[t_time[1]] + "-" + t_time[2] + " " + t_time[3]			
 				server_created_at = Time.now
@@ -161,6 +194,7 @@ class TwitterCollector
 	end
 
 	def closeTwitterClient()
+		@continue = false
 		@tclient.stop
 	end
 end
